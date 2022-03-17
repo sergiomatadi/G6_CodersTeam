@@ -1,0 +1,9 @@
+.container {
+  height: 100vh;
+}
+
+.welcome {
+  width: 50vw;
+  height: 50vh;
+  box-shadow: 0 4px 14px #999;
+}
