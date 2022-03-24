@@ -1,0 +1,35 @@
+h1{
+    align-items: center;
+}
+
+.container-avatar {
+    display:flex;
+    justify-content: center;
+    height: 200px;
+  }
+  .avatar {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    max-width: 20vw;
+    max-height: 20vw;
+    cursor: move;
+  }
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  } 
+  .game {
+    width: 20vw;
+    height: 20vw;
+    border: 5px dashed black;
+    margin: 15px 0;
+  }
+  @media (max-width: 800px) {
+    .game {
+      width: 40vw;
+      height: 40vw;
+    }
+  }
