@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/salas.css">
     <title>Salas</title>
+    
+<h1>Salas Juego</h1>
 </head>
 <body>
-    
+    <div class="front">
+        <div  class="container-avatar"  >
+          <img id="avatar" class="avatar" draggable="true" ondragstart="drag(event)" src="https://img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg" />
+        </div>
+        <div class="container">
+          <div id="game1" class="game" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+          <div id="game2" class="game" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+          <div id="game3" class="game" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+          <div id="game4" class="game" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+      </div>
+    <script src="../js/salas.js"></script>
 </body>
+
 </html>
