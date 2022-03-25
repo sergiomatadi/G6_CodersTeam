@@ -1,15 +1,13 @@
 const { createServer } = require("http");
+const users = require("./controllers/users"); // MODULO DE USERS
 
 const PORT = 3001;
 
 const requestListener = (req, res) => {
   const { url } = req;
-  let statusCode = 200;
-  let contentType = "application/json";
 
-  if (url === "/") {
-    res.writeHead(statusCode, { "Content-Type": contentType });
-    res.end("CodersTeam API");
+  if (url.includes("users")) {
+    users(req, res);
   } else {
     statusCode = 404;
     res.end("Not found");
@@ -18,5 +16,6 @@ const requestListener = (req, res) => {
 
 const server = createServer(requestListener);
 
-server.listen(PORT);
-console.log("Corriendo en puerto", PORT);
+server.listen(PORT, () => {
+  console.log("Corriendo en puerto", PORT);
+});
