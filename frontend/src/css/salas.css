@@ -1,7 +1,7 @@
 h1{
-    align-items: center;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
 .container-avatar {
     display:flex;
     justify-content: center;
@@ -11,25 +11,25 @@ h1{
     border-radius: 50%;
     height: 200px;
     width: 200px;
-    max-width: 20vw;
-    max-height: 20vw;
+    max-width: 10vw;
+    max-height: 10vw;
     cursor: move;
   }
   .container {
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
   } 
   .game {
-    width: 20vw;
-    height: 20vw;
+    width: 10vw;
+    height: 10vw;
     border: 5px dashed black;
-    margin: 15px 0;
+    margin: 15px 20px;
   }
   @media (max-width: 800px) {
     .game {
-      width: 40vw;
-      height: 40vw;
+      width: 20vw;
+      height: 20vw;
     }
   }
