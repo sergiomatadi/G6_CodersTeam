@@ -1,5 +1,6 @@
 .login {
   box-shadow: 0 4px 14px #999;
+  min-height: 400px;
 }
 
 .button-back {
