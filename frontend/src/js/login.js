@@ -18,10 +18,12 @@ const checkUser = async () => {
 
   const { status } = response;
 
+  // Depende del statusCode sabemos si ha ido bien el inicio de sesión o no
   if (status === 200) {
-    console.log("login ok", status);
+    // Login OK redirigimos al user a las salas
     window.location.href = "salas.html";
   } else {
+    // Login FAIL deberiamos mostrar un mensaje al user diciendo' usuario o pass incorrecto'
     console.log("login fail", status);
   }
 };
