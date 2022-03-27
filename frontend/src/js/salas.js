@@ -3,7 +3,7 @@ function dragstart(e) {
 
   }
   function allowDrop(ev) {
-    
+    ev.target.style.opacity ="0.4";
     ev.preventDefault();
   }
   
@@ -18,4 +18,9 @@ function dragstart(e) {
     var data = ev.dataTransfer.getData("text");
     ev.target.appendChild(document.getElementById(data));
     ev.target.style.display = 'block';
+    ev.target.style.opacity ="1";
+  }
+
+  function leave(ev) {
+    ev.target.style.opacity ="1";
   }
