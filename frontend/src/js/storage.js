@@ -1,3 +1,5 @@
+import Jugador from './Jugador.js'
+
 function obtenerDatos() {
   //Espero a que el usuario clicke el boton para arrancar la funcion guardarDatos.
   let boton = document.getElementById("botonregistro");
@@ -14,7 +16,7 @@ async function guardarDatos() {
 
   //localStorage.setItem(user, email, password);
   localStorage.user = user;
-  localStorage.email =email;
+  localStorage.email = email;
   localStorage.password = password;
 
   // Info que se envia al back
@@ -35,6 +37,7 @@ async function guardarDatos() {
 
   if (statusCode === 200) {
     // Registro OK redirigimos al user al Login. O podemos mostrar un mensaje de 'registro success' y poner un boton que redirija al login. SE HABLA!!
+    const player = new Jugador(email, passoword)
     window.location.href = "login.html";
   } else {
     // Registro FAIL deberiamos mostrar un mensaje al user diciendo 'Ha ocurrido un error al registrarse' o algo asi
