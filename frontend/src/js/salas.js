@@ -28,7 +28,7 @@ function leave(ev) {
 
 // Este bloque mira que en las diferentes casillas de game contenga el avatar, si es asi asigna el numero de la sala
 // Despues lo imprimimos en pantalla.
-// TODO: Falta borrado de sala al cambiar de una a otra y utilizar ese dato en el localstorage
+// TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala y utilizar ese dato en el localstorage
 function salaElegida() {
   if (game1.contains(avatar)) {
     sala = 1;
