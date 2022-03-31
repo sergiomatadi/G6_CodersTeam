@@ -1,3 +1,5 @@
+document.getElementById('avatar').setAttribute('src', sessionStorage.avatarJugador);
+
 function dragstart(e) {
   this.style.opacity = "0.1";
 }
