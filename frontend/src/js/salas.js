@@ -20,15 +20,17 @@ function drop(ev) {
   salaElegida();
 }
 
+// Este bloque cambia la opacidad de la sala cuando el avatar abandona la mitad del recuadro de sala.
+// Ademas extrae y borra lo que contiene el elemento con id elegida, es decir la sala elegida.
 function leave(ev) {
   ev.target.style.opacity = "1";
   let elegida = document.getElementById("elegida");
   elegida.innerHTML = "";
 }
 
-// Este bloque mira que en las diferentes casillas de game contenga el avatar, si es asi asigna el numero de la sala
+// Este bloque mira que en las diferentes casillas de game contenga el avatar, si es asi asigna el numero de la sala.
 // Despues lo imprimimos en pantalla.
-// TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala y utilizar ese dato en el localstorage
+// TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala y utilizar ese dato en el localstorage.
 function salaElegida() {
   if (game1.contains(avatar)) {
     sala = 1;
