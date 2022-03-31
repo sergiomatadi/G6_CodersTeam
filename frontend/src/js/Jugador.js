@@ -1,3 +1,5 @@
+/* Clase Jugador */
+
 export default class Jugador {
     constructor(mail,password, avatar = '', puntuacion = 0) {
         this._mail = mail
