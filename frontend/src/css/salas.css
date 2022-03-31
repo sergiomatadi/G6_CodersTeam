@@ -1,6 +1,7 @@
 
 html {
   margin-top:10%;
+  background-color: #dee2e6;
 }
 h1{
   text-align: center;
@@ -10,6 +11,7 @@ h1{
     display:flex;
     justify-content: center;
     height: 200px;
+    padding: 10px;
   }
   .avatar {
     border-radius: 50%;
