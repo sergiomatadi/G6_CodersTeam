@@ -22,6 +22,8 @@ function drop(ev) {
 
 function leave(ev) {
   ev.target.style.opacity = "1";
+  let elegida = document.getElementById("elegida");
+  elegida.innerHTML = "";
 }
 
 // Este bloque mira que en las diferentes casillas de game contenga el avatar, si es asi asigna el numero de la sala
