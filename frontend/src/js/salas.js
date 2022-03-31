@@ -30,7 +30,8 @@ function leave(ev) {
 
 // Este bloque mira que en las diferentes casillas de game contenga el avatar, si es asi asigna el numero de la sala.
 // Despues lo imprimimos en pantalla.
-// TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala y utilizar ese dato en el localstorage.
+// TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala.
+// Y emparejar dato de salaJugador en localstorage con el email del usuario que haga login
 function salaElegida() {
   if (game1.contains(avatar)) {
     sala = 1;
@@ -45,4 +46,5 @@ function salaElegida() {
   }
   let elegida = document.getElementById("elegida");
   elegida.insertAdjacentHTML("afterbegin", sala);
+  localStorage.salaJugador = sala;
 }
