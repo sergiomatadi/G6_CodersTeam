@@ -11,7 +11,10 @@
  * '/users/login'
  */
 
-let usersData = [];
+let usersData = [
+  { user: "edwin", email: "edwin@mail.com", password: "1234" },
+  { user: "Luis", email: "luis@correo.com", password: "1234" },
+];
 const users = async (req, res) => {
   const { headers, method, url } = req;
   const header = {
@@ -69,6 +72,7 @@ const users = async (req, res) => {
             res.writeHead(statusCode);
             res.end("Error de servidor");
           }
+          console.log("users", usersData);
           return usersData;
 
         case "/users/login":
@@ -95,11 +99,13 @@ const users = async (req, res) => {
             }
 
             res.writeHead(statusCode, header);
+            console.log("users", user[0]);
 
             const resBody = {
               headers,
               method,
               url,
+              content: user[0],
               statusCode,
             };
 
