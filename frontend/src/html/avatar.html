@@ -1,51 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- BOOTSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
     <!-- LOCAL CSS -->
+    <link rel="stylesheet" href="../css/globalStyle.css">
     <link rel="stylesheet" href="../css/avatar.css">
 
     <title>Avatar</title>
-
-    <h1>Elige tu avatar</h1>
-  
 </head>
+
 <body>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">CODERSTEAM</a>
+            <span class="navbar-text">
+                ¡Hola <span id="username"></span>
+            </span>
+        </div>
+    </nav>
     <!-- Container avatar y containers salas -->
-    
-    <div class="container ">
-        <div  class="container-avatar"  >
-            <button type="button" >     
-                <img class="avatar" onclick="elegirAvatar('https:/\/\img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg')" 
-                src="https://img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg" id = "avatar1" />           
-            </button>
-        </div>  
-         <div  class="container-avatar d-block"  >
-           
-                <button type="button" >     
-                    <img class="avatar" onclick="elegirAvatar('../img/ninja-removebg-preview.png')" src="../img/ninja-removebg-preview.png" id = "avatar2"/> 
 
-                </button>
-          </div>
-          <div  class="container-avatar d-block"  >
-           
-                <button type="button" >     
-                    <img class="avatar"  onclick="elegirAvatar('../img/pirata-removebg-preview.png')" src="../img/pirata-removebg-preview.png" id = "avatar3" />           
-                </button>
-          </div>
-          <div  class="container-avatar d-block"  >
-          
-                <button type="button" >     
-                    <img class="avatar" onclick="elegirAvatar('../img/pingu-removebg-preview.png')" src="../img/pingu-removebg-preview.png" id = "avatar4"/>           
-                </button>
-          </div>
-      </div>
-    
-<script src="../js/avatar.js"></script>
+    <h1 class="text-center my-5">Elige tu avatar</h1>
+    <div class="container">
+
+        <div class="container-avatar">
+            <button type="button" class="btn btn-light">
+                <img class="avatar"
+                    onclick="elegirAvatar('https:/\/\img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg')"
+                    src="https://img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg"
+                    id="avatar1" />
+            </button>
+        </div>
+        <div class="container-avatar">
+
+            <button type="button" class="btn btn-light">
+                <img class="avatar" onclick="elegirAvatar('../img/ninja-removebg-preview.png')"
+                    src="../img/ninja-removebg-preview.png" id="avatar2" />
+
+            </button>
+        </div>
+        <div class="container-avatar">
+
+            <button type="button" class="btn btn-light">
+                <img class="avatar" onclick="elegirAvatar('../img/pirata-removebg-preview.png')"
+                    src="../img/pirata-removebg-preview.png" id="avatar3" />
+            </button>
+        </div>
+        <div class="container-avatar">
+
+            <button type="button" class="btn btn-light">
+                <img class="avatar" onclick="elegirAvatar('../img/pingu-removebg-preview.png')"
+                    src="../img/pingu-removebg-preview.png" id="avatar4" />
+            </button>
+        </div>
+    </div>
+
+    <script src="../js/avatar.js"></script>
 </body>
 
 </html>

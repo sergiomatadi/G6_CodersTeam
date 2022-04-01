@@ -1,39 +1,24 @@
-
-html {
-    margin-top:10%;
-    background-color: #dee2e6;
-}
-h1{
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-}
 .container-avatar {
-    display:flex;
-    justify-content: center;
-    height: 200px;
-    padding: 10px;
+  display: flex;
+  justify-content: center;
+  height: 200px;
 }
 .avatar {
-    border-radius: 50%;
-    height: 200px;
-    width: 200px;
-    max-width: 10vw;
-    max-height: 10vw;
-    cursor: pointer;
-    transition: margin-bottom 0.3s;
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  max-width: 10vw;
+  max-height: 10vw;
+  cursor: pointer;
+  transition: margin-bottom 0.3s;
 }
 .avatar:hover {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-} 
-.game {
-    width: 10vw;
-    height: 10vw;
-    border: 5px dashed black;
-    margin: 15px 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
