@@ -5,12 +5,10 @@
  * este modulo se encaragara de todo lo relacionado con la sala seleccionada por el user
  * jugadores, sala, victoria o derrota, etc..
  *
- * De momento solo acepta metodo POST para registrarse y loguearse
+ * De momento solo acepta metodo POST y GET
  * Las rutas disponibles por ahora son:
- * '/users/register'
- * '/users/login'
+ * '/salas/save_game_data'
  */
-
 let salaData;
 
 const salas = async (req, res) => {
@@ -36,17 +34,11 @@ const salas = async (req, res) => {
     case "POST":
       // Comprobamos la url de la solicitud
       switch (url) {
-        case "/salas/guardar":
+        case "/salas/save_game_data":
           console.log("request in route -->", url);
-          let buffers = [];
           try {
-            // Lee los datos de la solicitud
-            for await (const chunk of req) {
-              buffers.push(chunk);
-            }
-            const data = Buffer.concat(buffers).toString();
-            salaData = JSON.parse(data);
-            console.log("salaData", salaData);
+            salaData = await getData(req);
+
             const statusCode = 200;
 
             res.writeHead(statusCode, header);
@@ -69,6 +61,20 @@ const salas = async (req, res) => {
             res.end("Error de servidor");
           }
       }
+  }
+};
+
+// Recibe una request y devuelve el body de la misma
+const getData = async (req) => {
+  let buffers = [];
+  try {
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const data = Buffer.concat(buffers).toString();
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error", error);
   }
 };
 

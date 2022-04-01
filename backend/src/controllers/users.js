@@ -5,18 +5,19 @@
  * este modulo se encaragara de todo lo relacionado con el usuario
  * registro, login, guardar u obtener info del user, etc..
  *
- * De momento solo acepta metodo POST para registrarse y loguearse
+ * De momento solo acepta metodo POST y GET
  * Las rutas disponibles por ahora son:
  * '/users/register'
  * '/users/login'
+ * '/users/save_avatar'
+ * '/users/get_opponent'
  */
-
-let usersData = [
-  { user: "edwin", email: "edwin@mail.com", password: "1234" },
-  { user: "Luis", email: "luis@correo.com", password: "1234" },
-];
+const URL = require("url");
+let usersData = [];
 const users = async (req, res) => {
   const { headers, method, url } = req;
+  console.log("path", URL.parse(url, true).pathname);
+  const pathName = URL.parse(url, true).pathname;
   const header = {
     "access-control-allow-credentials": true,
     "Access-Control-Allow-Origin": "*",
@@ -37,18 +38,14 @@ const users = async (req, res) => {
   switch (method) {
     case "POST":
       // Comprobamos la url de la solicitud
-      switch (url) {
+      switch (pathName) {
         case "/users/register":
           console.log("request in route -->", url);
-          let buffers = [];
-          try {
-            // Lee los datos de la solicitud
-            for await (const chunk of req) {
-              buffers.push(chunk);
-            }
-            const data = Buffer.concat(buffers).toString();
 
-            usersData = [...usersData, JSON.parse(data)];
+          try {
+            const data = await getDataFromBody(req);
+
+            usersData = [...usersData, data];
 
             const statusCode = 200;
 
@@ -72,20 +69,13 @@ const users = async (req, res) => {
             res.writeHead(statusCode);
             res.end("Error de servidor");
           }
-          console.log("users", usersData);
           return usersData;
 
         case "/users/login":
           console.log("request in route -->", url);
           let statusCode;
           try {
-            let buffers = [];
-            for await (const chuk of req) {
-              buffers.push(chuk);
-            }
-            const dataToParse = Buffer.concat(buffers).toString();
-
-            const data = JSON.parse(dataToParse);
+            const data = await getDataFromBody(req);
 
             // Comprueba que exista el usuario en la memoria
             const user = usersData.filter(
@@ -99,7 +89,55 @@ const users = async (req, res) => {
             }
 
             res.writeHead(statusCode, header);
-            console.log("users", user[0]);
+
+            const resBody = {
+              headers,
+              method,
+              url,
+              content: user[0],
+              statusCode,
+            };
+
+            res.writeHead(statusCode, header);
+            res.write(JSON.stringify(resBody));
+            res.end();
+          } catch (error) {
+            console.error(error);
+            const statusCode = 500;
+            res.writeHead(statusCode);
+            res.end("Error de servidor");
+          }
+          break;
+
+        case "/users/save_avatar":
+          console.log("request in route -->", url);
+          try {
+            const { avatar } = await getDataFromBody(req);
+
+            // saca el parametro 'user' de la url
+            const { user } = URL.parse(url, true).query;
+
+            // Comprueba que exista el usuario en la memoria
+            const userObject = usersData.filter((el) => el.email === user);
+            let statusCode;
+
+            if (userObject.length > 0) {
+              statusCode = 200;
+              usersData = usersData.map((el) => {
+                if (el.email === user) {
+                  return {
+                    avatar,
+                    ...el,
+                  };
+                } else {
+                  return el;
+                }
+              });
+            } else {
+              statusCode = 400;
+            }
+
+            res.writeHead(statusCode, header);
 
             const resBody = {
               headers,
@@ -123,7 +161,60 @@ const users = async (req, res) => {
           res.statusCode = 404;
           res.end("not found");
       }
+      break;
+    case "GET":
+      switch (pathName) {
+        case "/users/get_opponent":
+          console.log("request in route -->", url);
+          try {
+            const { user } = URL.parse(url, true).query;
+
+            const statusCode = 200;
+
+            const opponent = getOpponent(user);
+
+            res.writeHead(statusCode, header);
+
+            const resBody = {
+              headers,
+              method,
+              url,
+              statusCode,
+              content: opponent,
+            };
+
+            res.write(JSON.stringify(resBody));
+            res.end();
+          } catch (error) {
+            console.error(error);
+
+            const statusCode = 500;
+
+            res.writeHead(statusCode);
+            res.end("Error de servidor");
+          }
+      }
   }
+};
+
+// Recibe una request y devuelve el body de la misma
+const getDataFromBody = async (req) => {
+  let buffers = [];
+  try {
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const data = Buffer.concat(buffers).toString();
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error", error);
+  }
+};
+
+// saca un elemeto random del array de los users
+const getOpponent = (nameUser) => {
+  const possiblesOpponents = usersData.filter((el) => el.email !== nameUser);
+  return possiblesOpponents[(Math.random() * possiblesOpponents.length) | 0];
 };
 
 module.exports = users;
