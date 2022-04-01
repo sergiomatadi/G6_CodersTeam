@@ -51,21 +51,9 @@ async function salaElegida() {
   } else {
     sala = "";
   }
+  window.location.href = "juego.html";
 
-  const bodyData = {
-    user: {
-      name: sesionUser.user,
-      email: sesionUser.email,
-    },
-    idSala: sala,
-  };
-  console.log(bodyData);
-  const postData = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(bodyData),
-  });
-  const { statusCode } = await postData.json();
-
+  // Nose si es muy util esta parte, con la redireccion al juego no se ve el numero de sala!
   let elegida = document.getElementById("elegida");
   elegida.insertAdjacentHTML("afterbegin", sala);
   localStorage.salaJugador = sala;
