@@ -1,4 +1,9 @@
-document.getElementById('avatar').setAttribute('src', sessionStorage.avatarJugador);
+const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
+const url = "http://localhost:3001/salas/guardar";
+
+document
+  .getElementById("avatar")
+  .setAttribute("src", sessionStorage.avatarJugador);
 
 function dragstart(e) {
   this.style.opacity = "0.1";
@@ -34,7 +39,7 @@ function leave(ev) {
 // Despues lo imprimimos en pantalla.
 // TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala.
 // Y emparejar dato de salaJugador en localstorage con el email del usuario que haga login
-function salaElegida() {
+async function salaElegida() {
   if (game1.contains(avatar)) {
     sala = 1;
   } else if (game2.contains(avatar)) {
@@ -46,7 +51,29 @@ function salaElegida() {
   } else {
     sala = "";
   }
+
+  const bodyData = {
+    user: {
+      name: sesionUser.user,
+      email: sesionUser.email,
+    },
+    idSala: sala,
+  };
+  console.log(bodyData);
+  const postData = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(bodyData),
+  });
+  const { statusCode } = await postData.json();
+
   let elegida = document.getElementById("elegida");
   elegida.insertAdjacentHTML("afterbegin", sala);
   localStorage.salaJugador = sala;
 }
+
+const headerNameElement = document.getElementById("username");
+
+headerNameElement.insertAdjacentHTML(
+  "beforeend",
+  sesionUser ? `${sesionUser.user}!` : "Jugador!"
+);
