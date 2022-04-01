@@ -1,3 +1,5 @@
+const loggedUser = [];
+
 const logUser = () => {
   let boton = document.getElementById("loginButton");
   boton.addEventListener("click", checkUser, false);
@@ -16,17 +18,22 @@ const checkUser = async () => {
     body: JSON.stringify(dataToSend),
   });
 
-  const { status } = response;
+  const { content, statusCode } = await response.json();
 
   // Depende del statusCode sabemos si ha ido bien el inicio de sesión o no
-  if (status === 200) {
+  if (statusCode === 200 && content) {
+    loggedUser.push(content);
+
+    // Guardamos en localStorage el user conectado
+    localStorage.setItem("sesionUser", JSON.stringify(content));
+
     // Login OK redirigimos al user a las salas
     window.location.href = "avatar.html";
     //llamada al método
     // avatarElegido();
   } else {
     // Login FAIL deberiamos mostrar un mensaje al user diciendo' usuario o pass incorrecto'
-    console.log("login fail", status);
+    console.log("login fail", statusCode);
   }
 };
 
