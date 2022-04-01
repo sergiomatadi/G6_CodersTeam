@@ -42,15 +42,15 @@ const checkUser = async () => {
 // function avatarElegido() {
 //   getElementById(avatar);
 //   if (login.avatar("avatar1")) {
-//     avatarElegido = "https://img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg";
+//     avatarElegido = "https://img.myloview.de/fototapeten/monster.jpg";
 //   } else if (login.avatar("avatar2")) {
-//     avatarElegido = "../img/ninja-removebg-preview.png";
+//     avatarElegido = "../img/ninja.png";
 //   } else if (login.avatar("avatar3")) {
-//     avatarElegido = "../img/pirata-removebg-preview.png";
+//     avatarElegido = "../img/pirata.png";
 //   } else if (login.avatar("avatar4")) {
-//     avatarElegido = "../img/pingu-removebg-preview.png";
+//     avatarElegido = "../img/pinguino.png";
 //   } else {
-//     avatarElegido = "https://img.myloview.de/fototapeten/funny-cartoon-monster-face-vector-halloween-monster-square-avatar-700-176103253.jpg";
+//     avatarElegido = "https://img.myloview.de/fototapeten/monster.jpg";
 //   }
 // }
 
