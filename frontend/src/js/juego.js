@@ -15,6 +15,8 @@ const getGameData = async () => {
 
   // REVISAMOS QUE HAYA OPONENTE
   if (statusCode === 200 && content) {
+    
+    setTimeout(function(){
     const anfitrionNameEl = document.getElementById("anfitrionPlayer");
     const opponentNameEl = document.getElementById("opponentPlayer");
 
@@ -57,9 +59,10 @@ const getGameData = async () => {
     });
 
     const res = await saveGameData.json();
-    console.log("Game data", res);
+    console.log("Game data", res)}, 3000);
   } else {
 
+    
     // SI NO HAY OPONENTE REDIRIGIMOS A SALAS
     // Añadida ventana de alerta para mejorar el flujo en ese error.
     setTimeout(function() {
