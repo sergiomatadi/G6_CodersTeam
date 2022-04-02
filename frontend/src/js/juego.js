@@ -60,6 +60,9 @@ const getGameData = async () => {
     console.log("Game data", res);
   } else {
     // SI NO HAY OPONENTE REDIRIGIMOS A SALAS --> SE PUEDE MEJORAR!!!
+    // Añadida ventana de alerta para mejorar el flujo en ese error.
+    window.alert("No hay oponentes en el server");
+
     window.location.href = "salas.html";
     console.error("No hay oponentes en el server");
   }
