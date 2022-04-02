@@ -25,7 +25,7 @@ Mac: CMD + .
 
 # Punto de entrada de la aplicación.
 
-http://127.0.0.1:5500/frontend/src/html/home.html
+http://127.0.0.1:5500/frontend/src/html/home.html -> a traves de la extención live server de VSCode
 
 ## Flujo de la aplicación
 
