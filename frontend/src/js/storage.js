@@ -14,11 +14,6 @@ async function guardarDatos() {
   let user = document.getElementById("Username").value;
   let password = document.getElementById("inputPassword3").value;
 
-  //localStorage.setItem(user, email, password);
-  localStorage.user = user;
-  localStorage.email = email;
-  localStorage.password = password;
-
   // Info que se envia al back
   const dataToSend = {
     user,

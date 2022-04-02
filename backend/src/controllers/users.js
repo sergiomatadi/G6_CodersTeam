@@ -15,9 +15,15 @@
 const URL = require("url");
 let usersData = [];
 const users = async (req, res) => {
+  /**
+   * obtenemos lo que nos interesa de la request.
+   * headers lo devolvemos en la res,
+   * El method para saber si es GET POST, etc
+   * url para saber con que metodo responder
+   */
   const { headers, method, url } = req;
-  console.log("path", URL.parse(url, true).pathname);
-  const pathName = URL.parse(url, true).pathname;
+
+  const pathName = URL.parse(url, true).pathname; // Obtiene el pathName, es lo que usaremos para comparar cada endpoint
   const header = {
     "access-control-allow-credentials": true,
     "Access-Control-Allow-Origin": "*",
