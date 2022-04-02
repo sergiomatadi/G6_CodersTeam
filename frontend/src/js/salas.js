@@ -25,7 +25,11 @@ function drop(ev) {
   ev.target.style.display = "block";
   ev.target.style.opacity = "1";
   salaElegida();
+  
 }
+
+  
+
 
 // Este bloque cambia la opacidad de la sala cuando el avatar abandona la mitad del recuadro de sala.
 // Ademas extrae y borra lo que contiene el elemento con id elegida, es decir la sala elegida.

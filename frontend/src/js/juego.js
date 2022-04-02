@@ -59,12 +59,18 @@ const getGameData = async () => {
     const res = await saveGameData.json();
     console.log("Game data", res);
   } else {
-    // SI NO HAY OPONENTE REDIRIGIMOS A SALAS --> SE PUEDE MEJORAR!!!
-    // Añadida ventana de alerta para mejorar el flujo en ese error.
-    window.alert("No hay oponentes en el server");
 
-    window.location.href = "salas.html";
-    console.error("No hay oponentes en el server");
+    // SI NO HAY OPONENTE REDIRIGIMOS A SALAS
+    // Añadida ventana de alerta para mejorar el flujo en ese error.
+    setTimeout(function() {
+      alert("No hay oponentes en el server");
+    }, 3000);
+    
+
+    setTimeout(function () {
+      window.location.href = "salas.html";
+      console.error("No hay oponentes en el server");
+    }, 4000);
   }
 };
 
