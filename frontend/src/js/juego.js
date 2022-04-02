@@ -12,11 +12,8 @@ const getGameData = async () => {
   );
 
   const { content, statusCode } = await fetchData.json();
-
   // REVISAMOS QUE HAYA OPONENTE
   if (statusCode === 200 && content) {
-    
-    setTimeout(function(){
     const anfitrionNameEl = document.getElementById("anfitrionPlayer");
     const opponentNameEl = document.getElementById("opponentPlayer");
 
@@ -59,21 +56,22 @@ const getGameData = async () => {
     });
 
     const res = await saveGameData.json();
-    console.log("Game data", res)}, 3000);
   } else {
-
-    
+    const searchingTitleEl = document.getElementById("buscandoOponente");
+    searchingTitleEl.classList.remove("d-none");
+    searchingTitleEl.classList.add("d-block");
     // SI NO HAY OPONENTE REDIRIGIMOS A SALAS
     // Añadida ventana de alerta para mejorar el flujo en ese error.
-    setTimeout(function() {
+    setTimeout(function () {
+      searchingTitleEl.classList.remove("d-block");
+
       alert("No hay oponentes en el server");
-    }, 3000);
-    
+    }, 10000);
 
     setTimeout(function () {
       window.location.href = "salas.html";
       console.error("No hay oponentes en el server");
-    }, 4000);
+    }, 12000);
   }
 };
 

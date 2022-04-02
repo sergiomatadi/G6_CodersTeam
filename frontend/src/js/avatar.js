@@ -23,6 +23,14 @@ async function elegirAvatar(avatar) {
   }
 }
 
+const logout = () => {
+  localStorage.removeItem("sesionUser");
+  window.location.href = "login.html";
+};
+
+let logoutButton = document.getElementById("logout");
+logoutButton.addEventListener("click", logout, false);
+
 const headerNameElement = document.getElementById("username");
 
 headerNameElement.insertAdjacentHTML(
