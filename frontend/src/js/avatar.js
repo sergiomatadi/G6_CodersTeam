@@ -25,7 +25,7 @@ async function elegirAvatar(avatar) {
 
 const logout = () => {
   localStorage.removeItem("sesionUser");
-  window.location.href = "login.html";
+  window.location.href = "/login";
 };
 
 let logoutButton = document.getElementById("logout");

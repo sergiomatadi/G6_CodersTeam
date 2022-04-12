@@ -1,105 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"
-    integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-  <script>
-    $(document).ready(function () {
-      $("#hide").click(function () {
-        $(".sala-elegida").hide();
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-1.12.4.min.js"
+      integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $("#hide").click(function () {
+          $(".sala-elegida").hide();
+        });
+        $("#show").click(function () {
+          $(".sala-elegida").show();
+        });
       });
-      $("#show").click(function () {
-        $(".sala-elegida").show();
-      });
-    });
-  </script>
+    </script>
 
-  <!-- BOOTSTRAP CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <!-- BOOTSTRAP CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
 
-  <!-- LOCAL CSS -->
-  <link rel="stylesheet" href="../css/globalStyle.css">
-  <link rel="stylesheet" href="../css/salas.css">
-  <title>Salas</title>
-</head>
+    <!-- LOCAL CSS -->
+    <link rel="stylesheet" href="../css/globalStyle.css" />
+    <link rel="stylesheet" href="../css/salas.css" />
+    <title>Salas</title>
+  </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">CODERSTEAM</a>
-      <span class="navbar-text">
-        ¡Hola <span id="username"></span>
-      </span>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">CODERSTEAM</a>
+        <span class="navbar-text"> ¡Hola <span id="username"></span> </span>
 
-      <div class="volver" id="logout">
-        <button type="button" class="d-inline-flex justify-content-center btn btn-outline-secondary">
-          ⬅️ SALIR
+        <div class="volver" id="logout">
+          <button
+            type="button"
+            class="d-inline-flex justify-content-center btn btn-outline-secondary"
+          >
+            ⬅️ SALIR
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Botones para ocultar Sala, mostrar Sala y Volver para seleccionar avatar -->
+    <div class="d-flex flex-row justify-content-center my-5">
+      <div>
+        <button id="hide" type="button" class="d-inline-flex btn btn-secondary">
+          Ocultar Sala
         </button>
       </div>
-    </div>
-  </nav>
-
-  <!-- Botones para ocultar Sala, mostrar Sala y Volver para seleccionar avatar -->
-  <div class="d-flex flex-row justify-content-center my-5">
-    <div>
-      <button id="hide" type="button" class="d-inline-flex btn btn-secondary">
-        Ocultar Sala
-      </button>
-    </div>
-    <div>
-      <button id="show" type="button" class="d-inline-flex btn btn-primary mx-3">
-        Mostrar Sala
-      </button>
-    </div>
-
-    <div class="volver" id="volver">
-      <a href="avatar.html" class="text-dark">
-        <button type="button" class="d-inline-flex justify-content-center btn btn-danger">
-          VOLVER
+      <div>
+        <button
+          id="show"
+          type="button"
+          class="d-inline-flex btn btn-primary mx-3"
+        >
+          Mostrar Sala
         </button>
-      </a>
-    </div>
-  </div>
+      </div>
 
-  <!-- Texto sala elegida -->
-  <div class="sala-elegida">
-    <h2>
-      Sala Elegida:
-      <p id="elegida" class="d-inline-flex"></p>
-    </h2>
-  </div>
-
-  <!-- Container avatar y containers salas -->
-  <div class="container-avatar">
-    <img id="avatar" class="avatar" draggable="true" ondragstart="drag(event)" src="" />
-  </div>
-  <div class="container">
-    <div>
-      <h2>Sala 1</h2>
-      <div id="game1" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
+      <div class="volver" id="volver">
+        <a href="/avatar" class="text-dark">
+          <button
+            type="button"
+            class="d-inline-flex justify-content-center btn btn-danger"
+          >
+            VOLVER
+          </button>
+        </a>
+      </div>
     </div>
-    <div>
-      <h2>Sala 2</h2>
-      <div id="game2" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-    <div>
-      <h2>Sala 3</h2>
-      <div id="game3" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-    <div>
-      <h2>Sala 4</h2>
-      <div id="game4" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-  </div>
 
-  <!-- Enlace JavaScript -->
-  <script src="../js/salas.js"></script>
+    <!-- Texto sala elegida -->
+    <div class="sala-elegida">
+      <h2>
+        Sala Elegida:
+        <p id="elegida" class="d-inline-flex"></p>
+      </h2>
+    </div>
 
-</body>
+    <!-- Container avatar y containers salas -->
+    <div class="container-avatar">
+      <img
+        id="avatar"
+        class="avatar"
+        draggable="true"
+        ondragstart="drag(event)"
+        src=""
+      />
+    </div>
+    <div class="container">
+      <div>
+        <h2>Sala 1</h2>
+        <div
+          id="game1"
+          class="game"
+          ondrop="drop(event)"
+          ondragover="allowDrop(event)"
+          ondragleave="leave(event)"
+        ></div>
+      </div>
+      <div>
+        <h2>Sala 2</h2>
+        <div
+          id="game2"
+          class="game"
+          ondrop="drop(event)"
+          ondragover="allowDrop(event)"
+          ondragleave="leave(event)"
+        ></div>
+      </div>
+      <div>
+        <h2>Sala 3</h2>
+        <div
+          id="game3"
+          class="game"
+          ondrop="drop(event)"
+          ondragover="allowDrop(event)"
+          ondragleave="leave(event)"
+        ></div>
+      </div>
+      <div>
+        <h2>Sala 4</h2>
+        <div
+          id="game4"
+          class="game"
+          ondrop="drop(event)"
+          ondragover="allowDrop(event)"
+          ondragleave="leave(event)"
+        ></div>
+      </div>
+    </div>
 
+    <!-- Enlace JavaScript -->
+    <script src="../js/salas.js"></script>
+  </body>
 </html>
