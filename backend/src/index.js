@@ -29,6 +29,14 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/html/", "login.html"));
 });
 
+app.get("/salas", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "salas.html"));
+});
+
+app.get("/juego", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "juego.html"));
+});
+
 /* const requestListener = (req, res) => {
   const { url } = req;
 
