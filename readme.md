@@ -13,7 +13,11 @@ base de datos noSQL de tipo MongoDB.
 
 # Instrucciones para el servidor Nodejs.
 
-## Iniciar servidor Nodejs - Escribir en terminal dentro de la ruta "G6_CodersTeam\backend".
+## Instalar dependencias (Express) - Escribir en terminal dentro de la ruta "G6_CodersTeam" o carpeta principal proyecto
+
+npm install
+
+## Iniciar servidor Nodejs/Express - Escribir en terminal dentro de la ruta "G6_CodersTeam\backend".
 
 npm run dev
 
@@ -25,7 +29,7 @@ Mac: CMD + .
 
 # Punto de entrada de la aplicación.
 
-http://127.0.0.1:5500/frontend/src/html/home.html -> a traves de la extención live server de VSCode
+http://localhost:3001/
 
 ## Flujo de la aplicación
 
