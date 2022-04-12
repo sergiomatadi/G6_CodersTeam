@@ -16,7 +16,7 @@ async function elegirAvatar(avatar) {
   const { statusCode } = await response.json();
 
   if (statusCode === 200) {
-    window.location.href = "salas.html";
+    window.location.href = "/salas";
     sessionStorage.avatarJugador = avatar;
   } else {
     console.error("Error saving user avatar");

@@ -69,7 +69,7 @@ const getGameData = async () => {
     }, 10000);
 
     setTimeout(function () {
-      window.location.href = "salas.html";
+      window.location.href = "/salas";
       console.error("No hay oponentes en el server");
     }, 12000);
   }

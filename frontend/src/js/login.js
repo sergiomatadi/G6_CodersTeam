@@ -28,7 +28,7 @@ const checkUser = async () => {
     localStorage.setItem("sesionUser", JSON.stringify(content));
 
     // Login OK redirigimos al user a las salas
-    window.location.href = "avatar.html";
+    window.location.href = "/avatar";
   } else {
     alert("Usuario o contraseña incorrecta!");
     // Login FAIL deberiamos mostrar un mensaje al user diciendo' usuario o pass incorrecto'

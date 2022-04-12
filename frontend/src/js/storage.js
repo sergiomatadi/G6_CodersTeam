@@ -33,7 +33,7 @@ async function guardarDatos() {
   if (statusCode === 200) {
     // Registro OK redirigimos al user al Login. O podemos mostrar un mensaje de 'registro success' y poner un boton que redirija al login. SE HABLA!!
     // const player = new Jugador(email, password); --> genera error, ver linea 1
-    window.location.href = "login.html";
+    window.location.href = "/login";
   } else {
     // Registro FAIL deberiamos mostrar un mensaje al user diciendo 'Ha ocurrido un error al registrarse' o algo asi
     console.log("Registro fail", statusCode);
