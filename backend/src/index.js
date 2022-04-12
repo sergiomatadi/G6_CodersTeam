@@ -1,24 +1,31 @@
-const { createServer } = require("http");
+/* const { createServer } = require("http"); */
 const users = require("./controllers/users"); // MODULO DE USERS
 const salas = require("./controllers/sala"); // MODULE SALAS
 
 // Express
 
 const express = require("express");
+const path = require("path");
 const app = express();
-const port = 3000;
+const PORT = 5000;
+
+app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "home.html"));
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.get("/register", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/html/", "register.html")
+  );
 });
 
-const PORT = 3001;
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "login.html"));
+});
 
-const requestListener = (req, res) => {
+/* const requestListener = (req, res) => {
   const { url } = req;
 
   if (url.includes("users")) {
@@ -29,10 +36,10 @@ const requestListener = (req, res) => {
     statusCode = 404;
     res.end("Not found");
   }
-};
+}; */
 
-const server = createServer(requestListener);
+// const server = createServer(requestListener);
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log("Corriendo en puerto", PORT);
 });
