@@ -51,7 +51,7 @@ async function salaElegida() {
   } else {
     sala = "";
   }
-  window.location.href = "juego.html";
+  window.location.href = "/juego";
 
   // Nose si es muy util esta parte, con la redireccion al juego no se ve el numero de sala!
   let elegida = document.getElementById("elegida");
@@ -68,7 +68,7 @@ headerNameElement.insertAdjacentHTML(
 
 const logout = () => {
   localStorage.removeItem("sesionUser");
-  window.location.href = "login.html";
+  window.location.href = "/login";
 };
 
 let logoutButton = document.getElementById("logout");
