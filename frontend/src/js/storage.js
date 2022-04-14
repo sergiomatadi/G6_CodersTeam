@@ -7,30 +7,31 @@ function obtenerDatos() {
 }
 
 async function guardarDatos() {
-  const url = "http://localhost:3001/users/register";
+  const url = "http://localhost:3001/users/";
 
   //Guardo los datos del usuario en el localStorage.
   let email = document.getElementById("inputEmail3").value;
-  let user = document.getElementById("Username").value;
+  let name = document.getElementById("Username").value;
   let password = document.getElementById("inputPassword3").value;
 
   // Info que se envia al back
   const dataToSend = {
-    user,
+    name,
     email,
     password,
   };
 
   const response = await fetch(url, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataToSend),
   });
 
-  const { content, statusCode } = await response.json();
+  const { ok, data, error } = await response.json();
 
-  const bodyResponse = content;
+  console.log("Response", ok, data);
 
-  if (statusCode === 200) {
+  if (ok) {
     // Registro OK redirigimos al user al Login. O podemos mostrar un mensaje de 'registro success' y poner un boton que redirija al login. SE HABLA!!
     // const player = new Jugador(email, password); --> genera error, ver linea 1
     window.location.href = "/login";
@@ -40,7 +41,6 @@ async function guardarDatos() {
   }
 
   // Respuesta del server
-  console.log("bodyResponse", bodyResponse);
 
   //Obtengo el almacenamiento de localStorage en consola.
   let guardarEmail = localStorage.getItem(email);

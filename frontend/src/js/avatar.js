@@ -1,31 +1,38 @@
 const sesion = JSON.parse(localStorage.getItem("sesionUser"));
+const URL = "http://localhost:3001/users/";
+
 async function elegirAvatar(avatar) {
   // Guardamos en localStorage el user avatar
-  const updatedSesion = {
-    avatar,
-    ...sesion,
-  };
-  localStorage.setItem("sesionUser", JSON.stringify(updatedSesion));
+  sesion.avatar = avatar;
 
-  const url = "http://localhost:3001/users/save_avatar";
-
-  const response = await fetch(`${url}?user=${sesion.email}`, {
-    method: "POST",
+  const response = await fetch(`${URL}${sesion.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ avatar }),
   });
-  const { statusCode } = await response.json();
+  const { ok, data, error } = await response.json();
 
-  if (statusCode === 200) {
+  if (ok) {
+    localStorage.setItem("sesionUser", JSON.stringify(sesion));
     window.location.href = "/salas";
-    sessionStorage.avatarJugador = avatar;
   } else {
-    console.error("Error saving user avatar");
+    console.error("Error saving user avatar", error);
   }
 }
 
-const logout = () => {
-  localStorage.removeItem("sesionUser");
-  window.location.href = "/login";
+const logout = async () => {
+  const response = await fetch(URL, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(sesion.token),
+  });
+  const { ok, error } = await response.json();
+  if (ok) {
+    localStorage.removeItem("sesionUser");
+    window.location.href = "/login";
+  } else {
+    console.error("Error al intentar salir", error);
+  }
 };
 
 let logoutButton = document.getElementById("logout");
@@ -35,5 +42,5 @@ const headerNameElement = document.getElementById("username");
 
 headerNameElement.insertAdjacentHTML(
   "beforeend",
-  sesion ? `${sesion.user}!` : "Jugador!"
+  sesion.name ? `${sesion.name}!` : "Jugador!"
 );

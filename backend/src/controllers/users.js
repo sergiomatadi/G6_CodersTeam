@@ -13,214 +13,172 @@
  * '/users/get_opponent'
  */
 const URL = require("url");
-let usersData = [];
-const users = async (req, res) => {
-  /**
-   * obtenemos lo que nos interesa de la request.
-   * headers lo devolvemos en la res,
-   * El method para saber si es GET POST, etc
-   * url para saber con que metodo responder
-   */
-  const { headers, method, url } = req;
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcrypt");
 
-  const pathName = URL.parse(url, true).pathname; // Obtiene el pathName, es lo que usaremos para comparar cada endpoint
-  const header = {
-    "access-control-allow-credentials": true,
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-    "Access-Control-Max-Age": 2592000,
+const USERS = [];
+const TOKENS = [];
+
+/* METODO PARA REGISTRAR UN USUARIO */
+
+router.post("/", (req, res) => {
+  const { name, email, password, avatar } = req.body;
+
+  if (!name || !email || !password) {
+    return res.json({
+      ok: false,
+      error: "No se han recibido los datos necesarios",
+    });
+  }
+  const hash = bcrypt.hashSync(password, 10);
+  //reemplazamos el password con su versión encriptada
+  req.body.password = hash;
+
+  const newUser = {
+    id: generate_string(),
+    name,
+    email,
+    password: req.body.password,
+    avatar,
   };
+  USERS.push(newUser);
+  console.log("USERS", USERS, USERS.length);
+  res.json({ ok: true, data: newUser });
+});
 
-  req.on("error", (err) => {
-    console.error(err);
-    response.statusCode = 400;
-    response.end("BAD REQUEST");
-  });
-  res.on("error", (err) => {
-    console.error(err);
-  });
+/* LOGUEA A UN USUARIO */
 
-  // Comprobamos el metodo de la solicitud
-  switch (method) {
-    case "POST":
-      // Comprobamos la url de la solicitud
-      switch (pathName) {
-        case "/users/register":
-          console.log("request in route -->", url);
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
 
-          try {
-            const data = await getDataFromBody(req);
-
-            usersData = [...usersData, data];
-
-            const statusCode = 200;
-
-            res.writeHead(statusCode, header);
-
-            const resBody = {
-              headers,
-              method,
-              url,
-              content: data,
-              statusCode,
-            };
-
-            res.write(JSON.stringify(resBody));
-            res.end();
-          } catch (error) {
-            console.error(error);
-
-            const statusCode = 500;
-
-            res.writeHead(statusCode);
-            res.end("Error de servidor");
-          }
-          return usersData;
-
-        case "/users/login":
-          console.log("request in route -->", url);
-          let statusCode;
-          try {
-            const data = await getDataFromBody(req);
-
-            // Comprueba que exista el usuario en la memoria
-            const user = usersData.filter(
-              (el) => el.email === data.email && el.password === data.password
-            );
-
-            if (user.length > 0) {
-              statusCode = 200;
-            } else {
-              statusCode = 400;
-            }
-
-            res.writeHead(statusCode, header);
-
-            const resBody = {
-              headers,
-              method,
-              url,
-              content: user[0],
-              statusCode,
-            };
-
-            res.writeHead(statusCode, header);
-            res.write(JSON.stringify(resBody));
-            res.end();
-          } catch (error) {
-            console.error(error);
-            const statusCode = 500;
-            res.writeHead(statusCode);
-            res.end("Error de servidor");
-          }
-          break;
-
-        case "/users/save_avatar":
-          console.log("request in route -->", url);
-          try {
-            const { avatar } = await getDataFromBody(req);
-
-            // saca el parametro 'user' de la url
-            const { user } = URL.parse(url, true).query;
-
-            // Comprueba que exista el usuario en la memoria
-            const userObject = usersData.filter((el) => el.email === user);
-            let statusCode;
-
-            if (userObject.length > 0) {
-              statusCode = 200;
-              usersData = usersData.map((el) => {
-                if (el.email === user) {
-                  return {
-                    avatar,
-                    ...el,
-                  };
-                } else {
-                  return el;
-                }
-              });
-            } else {
-              statusCode = 400;
-            }
-
-            res.writeHead(statusCode, header);
-
-            const resBody = {
-              headers,
-              method,
-              url,
-              content: user[0],
-              statusCode,
-            };
-
-            res.writeHead(statusCode, header);
-            res.write(JSON.stringify(resBody));
-            res.end();
-          } catch (error) {
-            console.error(error);
-            const statusCode = 500;
-            res.writeHead(statusCode);
-            res.end("Error de servidor");
-          }
-          break;
-        default:
-          res.statusCode = 404;
-          res.end("not found");
-      }
-      break;
-    case "GET":
-      switch (pathName) {
-        case "/users/get_opponent":
-          console.log("request in route -->", url);
-          try {
-            const { user } = URL.parse(url, true).query;
-
-            const statusCode = 200;
-
-            const opponent = getOpponent(user);
-
-            res.writeHead(statusCode, header);
-
-            const resBody = {
-              headers,
-              method,
-              url,
-              statusCode,
-              content: opponent,
-            };
-
-            res.write(JSON.stringify(resBody));
-            res.end();
-          } catch (error) {
-            console.error(error);
-
-            const statusCode = 500;
-
-            res.writeHead(statusCode);
-            res.end("Error de servidor");
-          }
-      }
+  // comprueba que haya correo o pass
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "correo o contraseña no recibidos" });
   }
-};
 
-// Recibe una request y devuelve el body de la misma
-const getDataFromBody = async (req) => {
-  let buffers = [];
-  try {
-    for await (const chunk of req) {
-      buffers.push(chunk);
-    }
-    const data = Buffer.concat(buffers).toString();
-    return JSON.parse(data);
-  } catch (error) {
-    console.error("Error", error);
+  const user = USERS.filter((user) => user.email === email);
+  console.log("user", user);
+  console.log("login", password, user.password);
+
+  if (user.length === 1 && bcrypt.compareSync(password, user[0].password)) {
+    const token = generate_string(15);
+
+    const { id, email, name } = user[0];
+
+    const userWithToken = {
+      id,
+      email,
+      name,
+      token,
+    };
+
+    TOKENS.push(userWithToken);
+
+    res.json({ ok: true, data: userWithToken });
+  } else {
+    // si no coinciden pasamos msg de error
+    res.json({ ok: false, error: "Usuario o Contraseña incorrecta" });
   }
+});
+
+/* METODO DELETE PARA HACER LOGOUT */
+
+router.delete("/logout", (req, res) => {
+  const { token } = req.body;
+
+  //si no existe el token no aceptamos logout
+  if (!token)
+    return res.status(400).json({ ok: false, error: "token no recibido" });
+  console.log("tokens", TOKENS);
+  // si lo recibimos, intentamos eliminarlo
+  const index = TOKENS.findIndex((el) => el.token === token);
+  TOKENS.splice(index);
+  console.log("tokens", TOKENS);
+  res.json({ ok: true });
+});
+
+/* ACTUALIZA UN USUARIO */
+
+router.put("/:id", (req, res) => {
+  const { avatar } = req.body;
+  const id = req.params.id;
+
+  const userToUpdate = USERS.filter((user) => user.id === id);
+
+  if (userToUpdate.length === 1) {
+    USERS.map((user) => {
+      if (user.id === id) {
+        return {
+          avatar,
+          ...user,
+        };
+      } else {
+        user;
+      }
+    });
+    return res.json({ ok: true, data: "Avatar guardado correctamente" });
+  } else {
+    return res.json({
+      ok: false,
+      error: `No se ha encontrado ningun usuario con este id ${id}`,
+    });
+  }
+});
+
+/* EXTERNAL FUNCTION PARA GENERAR RANDOMS STRINGS PARA ID's  */
+const generate_string = (length = 10) => {
+  let id = "";
+  const caracteresPossibles =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < length; i++) {
+    id += caracteresPossibles.charAt(
+      Math.floor(Math.random() * caracteresPossibles.length)
+    );
+  }
+  return id;
 };
 
-// saca un elemeto random del array de los users
-const getOpponent = (nameUser) => {
-  const possiblesOpponents = usersData.filter((el) => el.email !== nameUser);
-  return possiblesOpponents[(Math.random() * possiblesOpponents.length) | 0];
-};
+//       switch (pathName) {
+//         case "/users/get_opponent":
+//           console.log("request in route -->", url);
+//           try {
+//             const { user } = URL.parse(url, true).query;
 
-module.exports = users;
+//             const statusCode = 200;
+
+//             const opponent = getOpponent(user);
+
+//             res.writeHead(statusCode, header);
+
+//             const resBody = {
+//               headers,
+//               method,
+//               url,
+//               statusCode,
+//               content: opponent,
+//             };
+
+//             res.write(JSON.stringify(resBody));
+//             res.end();
+//           } catch (error) {
+//             console.error(error);
+
+//             const statusCode = 500;
+
+//             res.writeHead(statusCode);
+//             res.end("Error de servidor");
+//           }
+//       }
+//   }
+// };
+
+// // saca un elemeto random del array de los users
+// const getOpponent = (nameUser) => {
+//   const possiblesOpponents = usersData.filter((el) => el.email !== nameUser);
+//   return possiblesOpponents[(Math.random() * possiblesOpponents.length) | 0];
+// };
+
+module.exports = router;

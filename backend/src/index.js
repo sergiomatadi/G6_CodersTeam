@@ -11,6 +11,8 @@ const PORT = 3001;
 
 // Para poder usar los CSS y JS e imagenes incrustados en el HTML
 app.use(express.static(path.join((__dirname, "../frontend/src/"))));
+app.use(express.json());
+app.use("/users", users);
 
 // Ruta principal de nuestra aplicacion
 app.get("/", (req, res) => {
@@ -57,5 +59,5 @@ app.get("/avatar", (req, res) => {
 // const server = createServer(requestListener);
 
 app.listen(PORT, () => {
-  console.log("Corriendo en puerto", PORT);
+  console.log("Corriendo en puerto", `http://localhost:${PORT}`);
 });
