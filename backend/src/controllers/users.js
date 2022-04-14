@@ -60,8 +60,6 @@ router.post("/login", (req, res) => {
   }
 
   const user = USERS.filter((user) => user.email === email);
-  console.log("user", user);
-  console.log("login", password, user.password);
 
   if (user.length === 1 && bcrypt.compareSync(password, user[0].password)) {
     const token = generate_string(15);
