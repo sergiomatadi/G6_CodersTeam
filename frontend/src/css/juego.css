@@ -3,3 +3,20 @@
   flex-direction: column;
   justify-content: center;
 }
+*{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+}
+
+#myCanvas{
+  background: fixed;
+  border: 1px solid black;
+}
+#container {
+  position: relative;
+  margin: 5vh auto;
+  width: 500px;
+  height: 500px;   
+}
