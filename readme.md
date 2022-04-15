@@ -13,7 +13,7 @@ base de datos noSQL de tipo MongoDB.
 
 # Instrucciones para el servidor Nodejs.
 
-## Instalar dependencias (Express) - Escribir en terminal dentro de la ruta "G6_CodersTeam" o carpeta principal proyecto
+## Instalar dependencias (Express) - Escribir en terminal dentro de la ruta "G6_CodersTeam\backend".
 
 npm install
 

@@ -6,7 +6,7 @@ const logUser = () => {
 };
 
 const checkUser = async () => {
-  const url = "http://localhost:3001/users/login";
+  const url = "http://localhost:3001/users/login/";
 
   const dataToSend = {
     email: document.getElementById("inputEmailLogin").value,
@@ -15,17 +15,18 @@ const checkUser = async () => {
 
   const response = await fetch(url, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataToSend),
   });
 
-  const { content, statusCode } = await response.json();
+  const { ok, data } = await response.json();
 
   // Depende del statusCode sabemos si ha ido bien el inicio de sesión o no
-  if (statusCode === 200 && content) {
-    loggedUser.push(content);
+  if (ok) {
+    loggedUser.push(data);
 
     // Guardamos en localStorage el user conectado
-    localStorage.setItem("sesionUser", JSON.stringify(content));
+    localStorage.setItem("sesionUser", JSON.stringify(data));
 
     // Login OK redirigimos al user a las salas
     window.location.href = "/avatar";

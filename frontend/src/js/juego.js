@@ -49,7 +49,7 @@ const getGameData = async () => {
     );
     anfitrionNameEl.insertAdjacentHTML(
       "beforeend",
-      sesionUser.user ? `${sesionUser.user}` : "Anfitrión!"
+      sesionUser.name ? `${sesionUser.name}` : "Anfitrión!"
     );
 
     opponentImageEl.setAttribute("src", content.avatar);
@@ -57,11 +57,11 @@ const getGameData = async () => {
 
     const data = {
       player1: {
-        name: sesionUser.user,
+        name: sesionUser.name,
         puntuacion: 0,
       },
       player2: {
-        name: content.user,
+        name: content.name,
         puntuacion: 0,
       },
       idSala: selectedSala,

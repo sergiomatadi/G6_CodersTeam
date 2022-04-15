@@ -1,9 +1,7 @@
 const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 const url = "http://localhost:3001/salas/guardar";
 
-document
-  .getElementById("avatar")
-  .setAttribute("src", sessionStorage.avatarJugador);
+document.getElementById("avatar").setAttribute("src", sesionUser.avatar);
 
 function dragstart(e) {
   this.style.opacity = "0.1";
@@ -63,7 +61,7 @@ const headerNameElement = document.getElementById("username");
 
 headerNameElement.insertAdjacentHTML(
   "beforeend",
-  sesionUser ? `${sesionUser.user}!` : "Jugador!"
+  sesionUser.name ? `${sesionUser.name}!` : "Jugador!"
 );
 
 const logout = () => {
