@@ -1,3 +1,7 @@
+// Comprobamos que el user esta registrado
+if (!localStorage.getItem("sesionUser")) {
+  window.location.href = "/login";
+} else {
 const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 const selectedSala = JSON.parse(localStorage.getItem("salaJugador"));
 const url = "http://localhost:3001/";
@@ -76,3 +80,4 @@ const getGameData = async () => {
 };
 
 window.addEventListener("load", getGameData, false);
+}

@@ -28,6 +28,7 @@ const checkUser = async () => {
     // Guardamos en localStorage el user conectado
     localStorage.setItem("sesionUser", JSON.stringify(data));
 
+    
     // Login OK redirigimos al user a las salas
     window.location.href = "/avatar";
   } else {

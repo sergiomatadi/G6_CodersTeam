@@ -1,3 +1,7 @@
+if (!localStorage.getItem("sesionUser")) {
+  window.location.href = "/login";
+} else {
+
 const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 const url = "http://localhost:3001/salas/guardar";
 
@@ -71,3 +75,4 @@ const logout = () => {
 
 let logoutButton = document.getElementById("logout");
 logoutButton.addEventListener("click", logout, false);
+}
