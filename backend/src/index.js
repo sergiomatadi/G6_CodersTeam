@@ -1,13 +1,25 @@
-/* const { createServer } = require("http"); */
 const users = require("./controllers/users"); // MODULO DE USERS
 const salas = require("./controllers/sala"); // MODULE SALAS
-
+const sockets = require("./controllers/sockets"); // MODULO SOCKET
 // Express
-
 const express = require("express");
 const path = require("path");
 const app = express();
+
+// Requiere http server porque sera el http server el que se le pasara a socket
+const server = require("http").Server(app);
+
 const PORT = 3001;
+
+const httpServer = server.listen(PORT, () => {
+  console.log("Corriendo en puerto", `http://localhost:${PORT}`);
+});
+
+// Requiere Socket.io y le pasa el server http
+const io = require("socket.io")(httpServer);
+
+// Pasamos la conexión al modulo socket
+sockets(io);
 
 // Para poder usar los CSS y JS e imagenes incrustados en el HTML
 app.use(express.static(path.join((__dirname, "../frontend/src/"))));
@@ -41,23 +53,4 @@ app.get("/juego", (req, res) => {
 
 app.get("/avatar", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/html/", "avatar.html"));
-});
-
-/* const requestListener = (req, res) => {
-  const { url } = req;
-
-  if (url.includes("users")) {
-    users(req, res);
-  } else if (url.includes("salas")) {
-    salas(req, res);
-  } else {
-    statusCode = 404;
-    res.end("Not found");
-  }
-}; */
-
-// const server = createServer(requestListener);
-
-app.listen(PORT, () => {
-  console.log("Corriendo en puerto", `http://localhost:${PORT}`);
 });
