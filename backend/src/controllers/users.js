@@ -17,7 +17,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 
-const USERS = [];
+const USERS = [
+  {
+    id: "fcNTjCTSOU",
+    name: "q",
+    email: "q",
+    password: "$2b$10$e30q7YghbQ1IYAXqDMh3s.DdDUSqObgd/4iFRZ/k92eL5hQ1y/w0W",
+    avatar: undefined,
+  },
+];
 const TOKENS = [];
 
 /* METODO PARA REGISTRAR UN USUARIO */
