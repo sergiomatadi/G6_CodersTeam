@@ -4,7 +4,7 @@ const url = "http://localhost:3001/";
 const userEndpoint = "users/get_opponent";
 const salaEndpoint = "salas/save_game_data";
 
-/*Function to creat layout and pixels*/
+//Función para crear layout y celdas//
 
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
