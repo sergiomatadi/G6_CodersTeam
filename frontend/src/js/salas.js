@@ -1,52 +1,78 @@
+// CONSTANTES
 const socket = io();
+const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 
+// VARIABLES GENERALES
 let clientId = null;
 let gameId = null;
 let playerColor = null;
 
+// ELEMENTOS
 const divGames = document.getElementById("divGames");
+const divNoGames = document.getElementById("noGameContainer");
+const createButton = document.getElementById("createGameButton");
+
+// CAMBIA EL AVATAR POR EL SELECCIONADO POR EL USER
+document.getElementById("avatar").setAttribute("src", sesionUser.avatar);
+
+// BOTON PARA CREAR UNA NUEVA PARTIDA
+createButton.addEventListener("click", () => {
+  socket.emit("create", clientId);
+});
+
+// UN USUARIO ENTRA EN EL JUEGO
 socket.on("connectgame", (payload) => {
-  console.log("payload", payload);
-  clientId = payload.clientId;
+  const data = JSON.parse(payload);
+  clientId = data.clientId;
 
   while (divGames.firstChild) divGames.removeChild(divGames.firstChild);
 
-  const { games } = payload;
+  const { games } = data;
   const availabeGames = Object.keys(games);
-  for (let i = 0; i < availabeGames.length; i++) {
-    const div = document.createElement("div");
-    div.id = `game${i + 1}`;
-    div.tag = availabeGames[i];
-    div.textContent = i + 1;
-    div.style.width = "150px";
-    div.style.height = "150px";
-    div.style.backgroundColor = "#3d375e7f";
-    div.addEventListener("drop", (e) => {
-      const payload = {
-        clientId: clientId,
-        gameId: div.tag,
-      };
 
-      gameId = div.tag;
-      socket.emit("join", payload);
-    });
-    div.addEventListener("dragover", (e) => {
-      allowDrop(e);
-    });
-    div.addEventListener("dragleave", (e) => {
-      leave(e);
-    });
-    divBoard.appendChild(div);
+  if (availabeGames.length === 0) {
+    divNoGames.style.display = "flex";
+  } else {
+    // pinta el numero de salas creadas
+    for (let i = 0; i < availabeGames.length; i++) {
+      const div = document.createElement("div");
+      div.id = `game${i + 1}`;
+      div.className = "game";
+      div.tag = availabeGames[i];
+      div.textContent = `Jugadores: ${Object.values(games)[i].players.length}`;
+      div.style.width = "150px";
+      div.style.height = "150px";
+
+      // eventos
+      div.addEventListener("drop", (e) => {
+        const payload = {
+          clientId: clientId,
+          gameId: div.tag,
+        };
+
+        gameId = div.tag;
+        drop(e, payload);
+      });
+
+      div.addEventListener("dragover", (e) => {
+        allowDrop(e);
+      });
+
+      div.addEventListener("dragleave", (e) => {
+        leave(e);
+      });
+
+      // mete cada sala en el contenedor padre
+      divGames.className = "games-container";
+      divGames.appendChild(div);
+    }
   }
 });
-const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
-const url = "http://localhost:3001/salas/guardar";
-
-document.getElementById("avatar").setAttribute("src", sesionUser.avatar);
 
 function dragstart(e) {
   this.style.opacity = "0.1";
 }
+
 function allowDrop(ev) {
   ev.target.style.opacity = "0.4";
   ev.preventDefault();
@@ -57,18 +83,19 @@ function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
+function drop(ev, payload) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
   ev.target.style.display = "block";
   ev.target.style.opacity = "1";
-  salaElegida();
+  salaElegida(payload);
 }
 
 // Este bloque cambia la opacidad de la sala cuando el avatar abandona la mitad del recuadro de sala.
 // Ademas extrae y borra lo que contiene el elemento con id elegida, es decir la sala elegida.
 function leave(ev) {
+  console.log("leave");
   ev.target.style.opacity = "1";
   let elegida = document.getElementById("elegida");
   elegida.innerHTML = "";
@@ -78,7 +105,7 @@ function leave(ev) {
 // Despues lo imprimimos en pantalla.
 // TODO: Arreglar bug de guardado sala si sales del recuadro pero vuelves a la misma sala.
 // Y emparejar dato de salaJugador en localstorage con el email del usuario que haga login
-async function salaElegida() {
+async function salaElegida(payload) {
   if (game1.contains(avatar)) {
     sala = 1;
   } else if (game2.contains(avatar)) {
@@ -90,76 +117,88 @@ async function salaElegida() {
   } else {
     sala = "";
   }
-  socket.emit("create", clientId);
+  socket.emit("join", payload);
 
   // window.location.href = "/juego";
-
-  // Nose si es muy util esta parte, con la redireccion al juego no se ve el numero de sala!
-  // let elegida = document.getElementById("elegida");
-  // elegida.insertAdjacentHTML("afterbegin", sala);
-  localStorage.salaJugador = sala;
 }
 
+socket.on("waitPlayer", () => {
+  const divMessage = document.getElementById("waitPlayer");
+  divMessage.style.display = "flex";
+});
+
+// EVENTO QUE SE ENVIA AL SERVER PARA CREAR UNA PARTIDA
 socket.on("create", (game) => {
-  const { id, cells } = game;
+  const { id } = game;
   gameId = id;
   let elegida = document.getElementById("elegida");
   elegida.insertAdjacentHTML("afterbegin", id);
-  console.log(
-    `partida con el id ${id} de ${cells} celdas, creada correctamente`
-  );
-});
 
-const btnJoin = document.getElementById("btnJoin");
-btnJoin.addEventListener("click", (e) => {
-  console.log(gameId);
-  if (gameId === null) gameId = txtGameId.value;
-  console.log(gameId);
-  const payload = {
-    clientId: clientId,
-    gameId: gameId,
+  // guarda datos de la partida en localStorage
+  const gameData = {
+    id,
   };
+  localStorage.setItem("sesionGame", JSON.stringify(gameData));
 
-  socket.emit("join", payload);
+  // recarga la pagina para que se vea la nueva sala
+  window.location.reload();
 });
 
-const divPlayers = document.getElementById("divPlayers");
-const divBoard = document.getElementById("divBoard");
-const txtGameId = document.getElementById("txtGameId");
-socket.on("join", (game) => {
-  while (divPlayers.firstChild) divPlayers.removeChild(divPlayers.firstChild);
+// const btnJoin = document.getElementById("btnJoin");
+// btnJoin.addEventListener("click", (e) => {
+//   console.log(gameId);
+//   if (gameId === null) gameId = txtGameId.value;
+//   console.log(gameId);
+//   const payload = {
+//     clientId: clientId,
+//     gameId: gameId,
+//   };
 
-  game.players.forEach((player) => {
-    const div = document.createElement("div");
-    div.style.width = "200px";
-    div.style.background = player.color;
-    div.textContent = player.playerId;
-    divPlayers.appendChild(div);
+//   socket.emit("join", payload);
+// });
 
-    if (player.playerId === clientId) playerColor = player.color;
-  });
+// const divPlayers = document.getElementById("divPlayers");
+// const divBoard = document.getElementById("divBoard");
+// const txtGameId = document.getElementById("txtGameId");
+// socket.on("join", (game) => {
+//   while (divPlayers.firstChild) divPlayers.removeChild(divPlayers.firstChild);
 
-  while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+//   game.players.forEach((player) => {
+//     const div = document.createElement("div");
+//     div.style.width = "200px";
+//     div.style.background = player.color;
+//     div.textContent = player.playerId;
+//     divPlayers.appendChild(div);
 
-  for (let i = 0; i < game.cells; i++) {
-    const b = document.createElement("button");
-    b.id = `cell${i + 1}`;
-    b.tag = i + 1;
-    b.textContent = i + 1;
-    b.style.width = "150px";
-    b.style.height = "150px";
-    b.addEventListener("click", (e) => {
-      b.style.background = playerColor;
-      const payload = {
-        clientId: clientId,
-        gameId: gameId,
-        cellId: b.tag,
-        color: playerColor,
-      };
-      socket.emit("play", payload);
-    });
-    divBoard.appendChild(b);
-  }
+//     if (player.playerId === clientId) playerColor = player.color;
+//   });
+
+//   while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+
+//   for (let i = 0; i < game.cells; i++) {
+//     const b = document.createElement("button");
+//     b.id = `cell${i + 1}`;
+//     b.tag = i + 1;
+//     b.textContent = i + 1;
+//     b.style.width = "150px";
+//     b.style.height = "150px";
+//     b.addEventListener("click", (e) => {
+//       b.style.background = playerColor;
+//       const payload = {
+//         clientId: clientId,
+//         gameId: gameId,
+//         cellId: b.tag,
+//         color: playerColor,
+//       };
+//       socket.emit("play", payload);
+//     });
+//     divBoard.appendChild(b);
+//   }
+// });
+
+// REDIRIGE AL JUEGO CUANDO HAY DOS JUGADORES
+socket.on("gameStart", () => {
+  window.location.href = "/juego";
 });
 
 socket.on("update", (game) => {
@@ -172,6 +211,15 @@ socket.on("update", (game) => {
     const cellObject = document.getElementById("cell" + cell);
     cellObject.style.backgroundColor = color;
   }
+});
+
+// Alerta de que ya hay dos jugadores en la sala
+socket.on("toMuchPlayers", () => {
+  const divMessage = document.getElementById("toMuchPlayersContainer");
+  divMessage.style.display = "flex";
+  setTimeout(() => {
+    divMessage.style.display = "none";
+  }, 5000);
 });
 
 const headerNameElement = document.getElementById("username");
