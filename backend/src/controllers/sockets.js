@@ -34,8 +34,7 @@ module.exports = (io) => {
       const game = games[gameId];
 
       if (game?.players?.length >= 2) {
-        // too much players.. TODO: handle the response
-        console.log("HAY MAS DE DOS JUGADORES!");
+        socket.emit("toMuchPlayers");
         return;
       }
       // asigna un color random al jugador dependiendo de su index en el array
@@ -47,8 +46,17 @@ module.exports = (io) => {
         color,
       });
 
+      if (game.players.length === 1)
+        clients[clientId].connection.emit("waitPlayer");
+
       // empieza el juego cuando hay dos jugadores
-      if (game.players.length === 2) updateGameState();
+      if (game.players.length === 2) {
+        game.players.forEach((player) => {
+          const { connection } = clients[player.playerId];
+          connection.emit("gameStart");
+        });
+        updateGameState();
+      }
 
       // Itera cada jugador de la partida para notificar la union de un nuevo jugador
       game.players.forEach((player) => {
@@ -94,7 +102,7 @@ module.exports = (io) => {
       clientId,
     };
     // Retornamos el userID conectado y las partidas
-    socket.emit("connectgame", payload);
+    socket.emit("connectgame", JSON.stringify(payload));
   });
 };
 
