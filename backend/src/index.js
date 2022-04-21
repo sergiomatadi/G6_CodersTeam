@@ -14,33 +14,42 @@ app.use(express.static(path.join((__dirname, "../frontend/src/"))));
 app.use(express.json());
 app.use("/users", users);
 
+app.set("views", path.join((__dirname, "../frontend/src/html")));
+app.set("view engine", "pug");
+
 // Ruta principal de nuestra aplicacion
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "home.html"));
+  res.render("home");
+  //res.sendFile(path.join(__dirname, "../../frontend/src/html/", "home.pug"));
 });
 
 // Ruta vista del formulario registro
 app.get("/register", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/html/", "register.html")
-  );
+  res.render("register");
+  //res.sendFile(
+  //  path.join(__dirname, "../../frontend/src/html/", "register.html")
+  //);
 });
 
 // Ruta vista del formulario login
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "login.html"));
+  res.render("login");
+  // res.sendFile(path.join(__dirname, "../../frontend/src/html/", "login.html"));
 });
 
 app.get("/salas", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "salas.html"));
+  res.render("salas");
+  // res.sendFile(path.join(__dirname, "../../frontend/src/html/", "salas.html"));
 });
 
 app.get("/juego", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "juego.html"));
+  res.render("juego");
+  // res.sendFile(path.join(__dirname, "../../frontend/src/html/", "juego.html"));
 });
 
 app.get("/avatar", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/src/html/", "avatar.html"));
+  res.render("avatar");
+  // res.sendFile(path.join(__dirname, "../../frontend/src/html/", "avatar.html"));
 });
 
 /* const requestListener = (req, res) => {
