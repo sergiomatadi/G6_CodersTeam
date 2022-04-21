@@ -1,9 +1,31 @@
+// Comprobamos que el user esta registrado
+if (!localStorage.getItem("sesionUser")) {
+  window.location.href = "/login";
+} else {
 const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 const selectedSala = JSON.parse(localStorage.getItem("salaJugador"));
 const url = "http://localhost:3001/";
 const userEndpoint = "users/get_opponent";
 const salaEndpoint = "salas/save_game_data";
 
+//Función para crear layout y celdas//
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+
+for(var i=0; i<6; i++) {
+  for(var j=0; j<6; j++) {
+    ctx.beginPath();
+    ctx.rect(50*(i), 25*j, 50, 25);
+    ctx.stroke();
+    
+  }
+}
+
+function changeColor(id) {
+  document.getElementById(id).style.backgroundColor='blue';
+}
 // TODO: Refactorizar este codigo
 const getGameData = async () => {
   // Obtiene un oponente del back
@@ -76,3 +98,4 @@ const getGameData = async () => {
 };
 
 window.addEventListener("load", getGameData, false);
+}
