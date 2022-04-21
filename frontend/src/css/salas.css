@@ -5,7 +5,7 @@
 .container-avatar {
   display: flex;
   justify-content: center;
-  height: 200px;
+  margin-bottom: 20px;
   padding: 10px;
 }
 .avatar {
@@ -16,20 +16,42 @@
   max-height: 10vw;
   cursor: grab;
 }
+.noGames-container {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
 .container {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
 }
 h2 {
   text-align: center;
 }
+.waitPlayer-container {
+  display: none;
+  justify-content: center;
+}
+.tooMuchPlayers-container {
+  display: none;
+  text-align: center;
+  flex-direction: column;
+}
 .game {
-  width: 10vw;
-  height: 10vw;
-  border: 5px dashed black;
-  margin: 15px 20px;
+  border-radius: 34px;
+  background: #bbe0cb;
+  box-shadow: 21px 21px 42px #a6c7b5, -21px -21px 42px #d0f9e1;
+  padding: 20px;
+}
+.games-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
 }
 @media (max-width: 800px) {
   .game {

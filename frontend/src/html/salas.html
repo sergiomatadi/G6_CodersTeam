@@ -71,17 +71,32 @@
       <p id="elegida" class="d-inline-flex"></p>
     </h2>
   </div>
-  <button id='btnJoin'>Join Game</button>
-  <input type='text' id='txtGameId'>
+
   <div id='divPlayers'></div>
   <div id='divBoard'></div>
   <!-- Container avatar y containers salas -->
   <div class="container-avatar">
     <img id="avatar" class="avatar" draggable="true" ondragstart="drag(event)" src="" />
   </div>
-  <div id="divGames"></div>
-  <div class="container">
-    <div>
+  <div class="container mb-5">
+    <div id="waitPlayer" class="waitPlayer-container text-center">
+      <h2>
+        La partida empezara cuando se una otro jugador. Sera cuestion de segundos...⏱
+      </h2>
+    </div>
+    <div id="toMuchPlayersContainer" class="tooMuchPlayers-container text-center">
+      <h2>En esta sala ya estan completos 😭
+        <p>Quizas podrías crear una nueva sala 💪</p>
+      </h2>
+    </div>
+    <button id="createGameButton" type="button" class="btn btn-info w-25 m-auto mb-5">
+      Crear nueva Sala
+    </button>
+    <div id="noGameContainer" class="noGames-container">
+      <h2>⛔️ Ahora mismo no se encuentra ninguna sala abierta ⛔️</h2>
+    </div>
+    <div id="divGames"></div>
+    <!-- <div>
       <h2>Sala 1</h2>
       <div id="game1" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
     </div>
@@ -96,7 +111,7 @@
     <div>
       <h2>Sala 4</h2>
       <div id="game4" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
+    </div> -->
   </div>
 
 
