@@ -1,0 +1,37 @@
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    // BOOTSTRAP CSS
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css', rel='stylesheet', integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC', crossorigin='anonymous')
+    // LOCAL CSS
+    link(rel='stylesheet', href='../css/globalStyle.css')
+    link(rel='stylesheet', href='../css/avatar.css')
+    title Avatar
+  body
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+      .container-fluid
+        a.navbar-brand(href='#') CODERSTEAM
+        span.navbar-text
+          | &iexcl;Hola 
+          span#username
+        #logout.volver
+          button.d-inline-flex.justify-content-center.btn.btn-outline-secondary(type='button')
+            | &#x2B05;&#xFE0F; SALIR
+    // Container avatar y containers salas
+    h1.text-center.my-5 Elige tu avatar
+    .container
+      .container-avatar
+        button.btn.btn-light(type='button')
+          img#avatar1.avatar(onclick="elegirAvatar('../img/monster.png')", src='../img/monster.png')
+      .container-avatar
+        button.btn.btn-light(type='button')
+          img#avatar2.avatar(onclick="elegirAvatar('../img/ninja.png')", src='../img/ninja.png')
+      .container-avatar
+        button.btn.btn-light(type='button')
+          img#avatar3.avatar(onclick="elegirAvatar('../img/pirata.png')", src='../img/pirata.png')
+      .container-avatar
+        button.btn.btn-light(type='button')
+          img#avatar4.avatar(onclick="elegirAvatar('../img/pinguino.png')", src='../img/pinguino.png')
+    script(src='../js/avatar.js')
