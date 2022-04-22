@@ -18,12 +18,20 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 
+// TODO: DEJAR EL ARRAY VACIO CUANDO SE VAYA A ENTREGAR
 const USERS = [
   {
     id: "fcNTjCTSOU",
-    name: "q",
+    name: "Homer",
     email: "q",
     password: "$2b$10$e30q7YghbQ1IYAXqDMh3s.DdDUSqObgd/4iFRZ/k92eL5hQ1y/w0W",
+    avatar: undefined,
+  },
+  {
+    id: "0uq04Aacdy",
+    name: "Bart",
+    email: "w",
+    password: "$2b$10$zC0jzR0BmdPD41hAl.3QcOivm0afHdspalt8OGxDjCadPdd9JbFTi",
     avatar: undefined,
   },
 ];

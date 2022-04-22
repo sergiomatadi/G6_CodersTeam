@@ -1,5 +1,5 @@
-.front {
-  margin-top: 10vh;
+.salas-container {
+  display: block;
 }
 
 .container-avatar {
@@ -49,8 +49,9 @@ h2 {
 }
 .games-container {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
   gap: 50px;
 }
 @media (max-width: 800px) {
@@ -58,4 +59,79 @@ h2 {
     width: 20vw;
     height: 20vw;
   }
+}
+
+.game-container {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.players-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 190px;
+  height: 254px;
+  border-radius: 15px;
+  box-shadow: 1px 5px 60px 0px #100a886b;
+}
+
+.player-container .player-border-top {
+  width: 60%;
+  height: 3%;
+  background: #212529;
+  border-radius: 0px 0px 15px 15px;
+}
+
+.board-container {
+  border-radius: 30px;
+  background: #e0e0e0;
+  box-shadow: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  background: #24292d14;
+}
+
+.cell {
+  width: 80px;
+  height: 60px;
+  color: #090909;
+  padding: 0.7em 1.7em;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  border: 2px solid #e8e8e8;
+}
+
+.player-avatar {
+  height: 80px;
+  border-radius: 15px;
+  margin-top: 25px;
+}
+
+.player-container span {
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  display: block;
+  padding-top: 10px;
+  font-size: 20px;
+}
+
+.player-container .player-score {
+  font-weight: 400;
+  color: white;
+  display: block;
+  text-align: center;
+  padding-top: 3px;
+  font-size: 20px;
 }

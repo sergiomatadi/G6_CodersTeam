@@ -42,78 +42,74 @@
     </div>
   </nav>
 
-  <!-- Botones para ocultar Sala, mostrar Sala y Volver para seleccionar avatar -->
-  <div class="d-flex flex-row justify-content-center my-5">
-    <div>
-      <button id="hide" type="button" class="d-inline-flex btn btn-secondary">
-        Ocultar Sala
-      </button>
-    </div>
-    <div>
-      <button id="show" type="button" class="d-inline-flex btn btn-primary mx-3">
-        Mostrar Sala
-      </button>
-    </div>
 
-    <div class="volver" id="volver">
-      <a href="/avatar" class="text-dark">
-        <button type="button" class="d-inline-flex justify-content-center btn btn-danger">
-          VOLVER
+  <div id="salas" class="salas-container">
+    <!-- Botones para ocultar Sala, mostrar Sala y Volver para seleccionar avatar -->
+    <div class="d-flex flex-row justify-content-center my-5">
+      <div>
+        <button id="hide" type="button" class="d-inline-flex btn btn-secondary">
+          Ocultar Sala
         </button>
-      </a>
+      </div>
+      <div>
+        <button id="show" type="button" class="d-inline-flex btn btn-primary mx-3">
+          Mostrar Sala
+        </button>
+      </div>
+
+      <div class="volver" id="volver">
+        <a href="/avatar" class="text-dark">
+          <button type="button" class="d-inline-flex justify-content-center btn btn-danger">
+            VOLVER
+          </button>
+        </a>
+      </div>
     </div>
-  </div>
 
-  <!-- Texto sala elegida -->
-  <div class="sala-elegida">
-    <h2>
-      Sala Elegida:
-      <p id="elegida" class="d-inline-flex"></p>
-    </h2>
-  </div>
-
-  <div id='divPlayers'></div>
-  <div id='divBoard'></div>
-  <!-- Container avatar y containers salas -->
-  <div class="container-avatar">
-    <img id="avatar" class="avatar" draggable="true" ondragstart="drag(event)" src="" />
-  </div>
-  <div class="container mb-5">
-    <div id="waitPlayer" class="waitPlayer-container text-center">
+    <!-- Texto sala elegida -->
+    <div class="sala-elegida">
       <h2>
-        La partida empezara cuando se una otro jugador. Sera cuestion de segundos...⏱
+        Sala Elegida:
+        <p id="elegida" class="d-inline-flex"></p>
       </h2>
     </div>
-    <div id="toMuchPlayersContainer" class="tooMuchPlayers-container text-center">
-      <h2>En esta sala ya estan completos 😭
-        <p>Quizas podrías crear una nueva sala 💪</p>
-      </h2>
+
+    <div id='divPlayers'></div>
+    <div id='divBoard'></div>
+    <!-- Container avatar y containers salas -->
+    <div class="container-avatar">
+      <img id="avatar" class="avatar" draggable="true" ondragstart="drag(event)" src="" />
     </div>
-    <button id="createGameButton" type="button" class="btn btn-info w-25 m-auto mb-5">
-      Crear nueva Sala
-    </button>
-    <div id="noGameContainer" class="noGames-container">
-      <h2>⛔️ Ahora mismo no se encuentra ninguna sala abierta ⛔️</h2>
+
+    <div class="container mb-5">
+      <div id="waitPlayer" class="waitPlayer-container text-center">
+        <h2>
+          La partida empezara cuando se una otro jugador. Sera cuestion de segundos...⏱
+        </h2>
+      </div>
+      <div id="toMuchPlayersContainer" class="tooMuchPlayers-container text-center">
+        <h2>En esta sala ya estan completos 😭
+          <p>Quizas podrías crear una nueva sala 💪</p>
+        </h2>
+      </div>
+      <button id="createGameButton" type="button" class="btn btn-info w-25 m-auto mb-5">
+        Crear nueva Sala
+      </button>
+      <div id="noGameContainer" class="noGames-container">
+        <h2>⛔️ Ahora mismo no se encuentra ninguna sala abierta ⛔️</h2>
+      </div>
+
+      <div id="divGames"></div>
+
     </div>
-    <div id="divGames"></div>
-    <!-- <div>
-      <h2>Sala 1</h2>
-      <div id="game1" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-    <div>
-      <h2>Sala 2</h2>
-      <div id="game2" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-    <div>
-      <h2>Sala 3</h2>
-      <div id="game3" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div>
-    <div>
-      <h2>Sala 4</h2>
-      <div id="game4" class="game" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="leave(event)"></div>
-    </div> -->
   </div>
 
+  <div id="game" class="game-container mt-5">
+    <h1 class="text-center">🔥 Hora de la verdad 🔥</h1>
+    <div id="players" class="players-container w-100 my-5"></div>
+    <!-- DESCOMENTAR LA SIGUIENTE LINEA SI QUIERES TESTEAR LOS BOTONES EN LUGAR DEL CANVAS -->
+    <!-- <div id="board" class="board-container mb-5"></div> -->
+  </div>
 
   <!-- Enlace JavaScript -->
   <script src="/socket.io/socket.io.js"></script>
