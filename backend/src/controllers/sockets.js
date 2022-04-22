@@ -130,22 +130,39 @@ module.exports = (io) => {
 
 // Envia el stado de la partida actualizado cada 500ms
 const updateGameState = () => {
+  let game;
   // Itera las keys del objeto games. ej: ['cells', 'players', 'state']
   for (const g of Object.keys(games)) {
-    const game = games[g];
-
+    game = games[g];
     game.players.forEach((player) => {
+      console.log("state", game.state);
+      player.score = game.state && getScore(game.state, player.color);
       const { connection } = clients[player.playerId];
       connection.emit("update", game);
     });
   }
 
-  setTimeout(updateGameState, 500);
+  if (isFinishGame(game.state)) {
+    game.players.forEach((player) => {
+      const { connection } = clients[player.playerId];
+      connection.emit("finishGame", game.players);
+    });
+  } else {
+    setTimeout(updateGameState, 500);
+  }
 };
+
+const isFinishGame = (state) => state && Object.keys(state).length === 36;
 
 // DEVUELVE UN COLOR RANDOM DE LOS COLORES QUE RECIBE POR PARAM
 const getRandomColor = (colors) => {
   return colors[(Math.random() * colors.length) | 0];
+};
+
+// DEVUELVE LA CANTIDAD DE CELDAS CONQUISTADAS
+const getScore = (state, color) => {
+  const colors = Object.values(state);
+  return colors.filter((item) => item === color).length;
 };
 
 function S4() {
