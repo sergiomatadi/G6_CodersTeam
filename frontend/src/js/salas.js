@@ -10,7 +10,7 @@ if (!localStorage.getItem("sesionUser")) {
   let gameId = null;
   let playerColor = null;
 
-  // ELEMENTOS
+  // ELEMENTOS PARA LAS SALAS
   const divGames = document.getElementById("divGames");
   const divNoGames = document.getElementById("noGameContainer");
   const createButton = document.getElementById("createGameButton");
@@ -23,7 +23,7 @@ if (!localStorage.getItem("sesionUser")) {
     socket.emit("create", clientId);
   });
 
-  // UN USUARIO ENTRA EN EL JUEGO
+  // UN USUARIO ENTRA EN EL JUEGO - EMPIEZA LA CONEXION SOCKET
   socket.on("connectgame", (payload) => {
     const data = JSON.parse(payload);
     clientId = data.clientId;
@@ -34,7 +34,7 @@ if (!localStorage.getItem("sesionUser")) {
     const availabeGames = Object.keys(games);
 
     if (availabeGames.length === 0) {
-      divNoGames.style.display = "flex";
+      divNoGames.style.display = "flex"; // Informa de que no hay ninguna sala creada
     } else {
       // pinta el numero de salas creadas
       for (let i = 0; i < availabeGames.length; i++) {
@@ -53,6 +53,7 @@ if (!localStorage.getItem("sesionUser")) {
           const payload = {
             clientId: clientId,
             gameId: div.tag,
+            playerInfo: sesionUser,
           };
 
           gameId = div.tag;
@@ -74,6 +75,7 @@ if (!localStorage.getItem("sesionUser")) {
     }
   });
 
+  // FUNCIONES DE ARRASTRADO
   function dragstart(e) {
     this.style.opacity = "0.1";
   }
@@ -100,7 +102,6 @@ if (!localStorage.getItem("sesionUser")) {
   // Este bloque cambia la opacidad de la sala cuando el avatar abandona la mitad del recuadro de sala.
   // Ademas extrae y borra lo que contiene el elemento con id elegida, es decir la sala elegida.
   function leave(ev) {
-    console.log("leave");
     ev.target.style.opacity = "1";
     let elegida = document.getElementById("elegida");
     elegida.innerHTML = "";
@@ -122,11 +123,11 @@ if (!localStorage.getItem("sesionUser")) {
     } else {
       sala = "";
     }
+    // Emite el evento que escucha el server para unir un jugador a una sala
     socket.emit("join", payload);
-
-    // window.location.href = "/juego";
   }
 
+  // INFORMA A UN USUARIO QUE ESPERE A OTRA JUGADOR
   socket.on("waitPlayer", () => {
     const divMessage = document.getElementById("waitPlayer");
     divMessage.style.display = "flex";
@@ -149,73 +150,12 @@ if (!localStorage.getItem("sesionUser")) {
     window.location.reload();
   });
 
-  // const btnJoin = document.getElementById("btnJoin");
-  // btnJoin.addEventListener("click", (e) => {
-  //   console.log(gameId);
-  //   if (gameId === null) gameId = txtGameId.value;
-  //   console.log(gameId);
-  //   const payload = {
-  //     clientId: clientId,
-  //     gameId: gameId,
-  //   };
-
-  //   socket.emit("join", payload);
-  // });
-
-  // const divPlayers = document.getElementById("divPlayers");
-  // const divBoard = document.getElementById("divBoard");
-  // const txtGameId = document.getElementById("txtGameId");
-  // socket.on("join", (game) => {
-  //   while (divPlayers.firstChild) divPlayers.removeChild(divPlayers.firstChild);
-
-  //   game.players.forEach((player) => {
-  //     const div = document.createElement("div");
-  //     div.style.width = "200px";
-  //     div.style.background = player.color;
-  //     div.textContent = player.playerId;
-  //     divPlayers.appendChild(div);
-
-  //     if (player.playerId === clientId) playerColor = player.color;
-  //   });
-
-  //   while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
-
-  //   for (let i = 0; i < game.cells; i++) {
-  //     const b = document.createElement("button");
-  //     b.id = `cell${i + 1}`;
-  //     b.tag = i + 1;
-  //     b.textContent = i + 1;
-  //     b.style.width = "150px";
-  //     b.style.height = "150px";
-  //     b.addEventListener("click", (e) => {
-  //       b.style.background = playerColor;
-  //       const payload = {
-  //         clientId: clientId,
-  //         gameId: gameId,
-  //         cellId: b.tag,
-  //         color: playerColor,
-  //       };
-  //       socket.emit("play", payload);
-  //     });
-  //     divBoard.appendChild(b);
-  //   }
-  // });
-
-  // REDIRIGE AL JUEGO CUANDO HAY DOS JUGADORES
+  // MUESTRA EL JUEGO CUANDO HAY DOS JUGADORES
   socket.on("gameStart", () => {
-    window.location.href = "/juego";
-  });
-
-  socket.on("update", (game) => {
-    //{1: "red", 2: "blue"}
-    console.log("update game", game);
-    if (!game.state) return;
-    const { state } = game;
-    for (const cell of Object.keys(state)) {
-      const color = state[cell];
-      const cellObject = document.getElementById("cell" + cell);
-      cellObject.style.backgroundColor = color;
-    }
+    const salasContainer = document.querySelector("#salas");
+    const gameContainer = document.querySelector("#game");
+    salasContainer.style.display = "none";
+    gameContainer.style.display = "flex";
   });
 
   // Alerta de que ya hay dos jugadores en la sala
@@ -225,6 +165,107 @@ if (!localStorage.getItem("sesionUser")) {
     setTimeout(() => {
       divMessage.style.display = "none";
     }, 5000);
+  });
+
+  socket.on("join", (game) => {
+    if (!game) return; // si game no existe, no entra el juego
+
+    // CREA UNA CARD PARA CADA JUGADOR EN LA PARTIDA
+    const divPlayers = document.querySelector("#players");
+    game.players.forEach((player) => {
+      // Div para la card de cada jugador
+      const div = document.createElement("div");
+      div.className = "player-container";
+      div.style.background = player.color;
+
+      // Border top
+      const borderTop = document.createElement("div");
+      borderTop.className = "player-border-top";
+      div.appendChild(borderTop);
+
+      // Avatar
+      const img = document.createElement("img");
+      img.className = "player-avatar";
+      img.setAttribute("src", player.info.avatar);
+      div.appendChild(img);
+
+      // Nombre
+      const name = document.createElement("span");
+      name.textContent = player.info.name;
+      div.appendChild(name);
+
+      // Puntuación
+      const score = document.createElement("p");
+      score.className = "player-score";
+      score.textContent = "Celdas: 0";
+      div.appendChild(score);
+
+      if (player.playerId === clientId) playerColor = player.color;
+
+      divPlayers.appendChild(div);
+    });
+
+    /* COMENTAR ESTE CODIGO SI QUEREIS TESTEAR LOS BOTONES EN LUGAR DEL CANVAS */
+    // TODO: AÑADIR LOS EVENTOS ONCLICK EN CADA UNA DE LAS CELDAS
+    const divGame = document.querySelector("#game");
+    const canvas = document.createElement("canvas");
+    canvas.id = "canvas";
+    canvas.style.width = "502px";
+    canvas.style.height = "502px";
+
+    var ctx = canvas.getContext("2d");
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#3d375e7f";
+
+    for (var i = 0; i < 6; i++) {
+      for (var j = 0; j < 6; j++) {
+        ctx.beginPath();
+        ctx.rect(50 * i, 25 * j, 50, 25);
+        ctx.stroke();
+      }
+    }
+
+    divGame.appendChild(canvas);
+    /* END PARA COMENTAR */
+
+    /* DESCOMENTAR ESTE BLOQUE PARA TESTEAR EL JUEGO CON BOTONES EN LUGAR DE CANVAS
+       TAMBIEN DESCOMENTAR UNA LINEA EN EL HTML DE SALAS
+    */
+    //   const divBoard = document.querySelector("#board");
+    //   while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+
+    //   for (let i = 0; i < game.cells; i++) {
+    //     const b = document.createElement("button");
+    //     b.id = `cell${i + 1}`;
+    //     b.tag = i + 1;
+    //     b.className = "cell";
+    //     b.textContent = i + 1;
+    //     b.addEventListener("click", (e) => {
+    //       b.style.background = playerColor;
+    //       const payload = {
+    //         clientId: clientId,
+    //         gameId: gameId,
+    //         cellId: b.tag,
+    //         color: playerColor,
+    //       };
+    //       socket.emit("play", payload);
+    //     });
+    //     divBoard.appendChild(b);
+    //   }
+    //   divGame.appendChild(divBoard);
+    /* END BLOQUE */
+  });
+
+  // ACTUALIZA EL JUEGO
+  socket.on("update", (game) => {
+    //{1: "red", 2: "blue"}
+    if (!game.state) return;
+    const { state } = game;
+    for (const cell of Object.keys(state)) {
+      const color = state[cell];
+      const cellObject = document.getElementById("cell" + cell);
+      cellObject.style.backgroundColor = color;
+    }
   });
 
   const headerNameElement = document.getElementById("username");
