@@ -1,7 +1,7 @@
 // Comprobamos que el user esta registrado
 if (!localStorage.getItem("sesionUser")) {
   window.location.href = "/login";
-} else {
+}
   const sesion = JSON.parse(localStorage.getItem("sesionUser"));
   const URL = "http://localhost:3001/users/";
 
@@ -48,4 +48,4 @@ if (!localStorage.getItem("sesionUser")) {
     "beforeend",
     sesion.name ? `${sesion.name}!` : "Jugador!"
   );
-}
+

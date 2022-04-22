@@ -1,7 +1,7 @@
 // Comprobamos que el user esta registrado
 if (!localStorage.getItem("sesionUser")) {
   window.location.href = "/login";
-} else {
+}
 const sesionUser = JSON.parse(localStorage.getItem("sesionUser"));
 const selectedSala = JSON.parse(localStorage.getItem("salaJugador"));
 const url = "http://localhost:3001/";
@@ -9,7 +9,8 @@ const userEndpoint = "users/get_opponent";
 const salaEndpoint = "salas/save_game_data";
 
 //Función para crear layout y celdas//
-
+const anfitrionImageEl = document.getElementById("anfitrionImage");
+anfitrionImageEl.setAttribute("src", sesionUser.avatar);
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
@@ -98,4 +99,4 @@ const getGameData = async () => {
 };
 
 window.addEventListener("load", getGameData, false);
-}
+
