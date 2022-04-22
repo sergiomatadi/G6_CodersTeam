@@ -71,7 +71,6 @@ module.exports = (io) => {
 
       // empieza el juego cuando hay dos jugadores
       if (game.players.length === 2) {
-        console.log("empieza");
         game.players.forEach((player) => {
           const { connection } = clients[player.playerId];
           connection.emit("gameStart");
@@ -135,7 +134,6 @@ const updateGameState = () => {
   for (const g of Object.keys(games)) {
     game = games[g];
     game.players.forEach((player) => {
-      console.log("state", game.state);
       player.score = game.state && getScore(game.state, player.color);
       const { connection } = clients[player.playerId];
       connection.emit("update", game);

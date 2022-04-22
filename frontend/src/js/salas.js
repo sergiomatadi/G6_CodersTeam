@@ -196,8 +196,9 @@ if (!localStorage.getItem("sesionUser")) {
 
       // Puntuación
       const score = document.createElement("p");
+      score.id = player.playerId;
       score.className = "player-score";
-      score.textContent = "Celdas: 0";
+      score.textContent = `Celdas: 0`;
       div.appendChild(score);
 
       if (player.playerId === clientId) playerColor = player.color;
@@ -205,9 +206,9 @@ if (!localStorage.getItem("sesionUser")) {
       divPlayers.appendChild(div);
     });
 
+    const divGame = document.querySelector("#game");
     /* COMENTAR ESTE CODIGO SI QUEREIS TESTEAR LOS BOTONES EN LUGAR DEL CANVAS */
     // TODO: AÑADIR LOS EVENTOS ONCLICK EN CADA UNA DE LAS CELDAS
-    const divGame = document.querySelector("#game");
     const canvas = document.createElement("canvas");
     canvas.id = "canvas";
     canvas.style.width = "502px";
@@ -231,28 +232,28 @@ if (!localStorage.getItem("sesionUser")) {
     /* DESCOMENTAR ESTE BLOQUE PARA TESTEAR EL JUEGO CON BOTONES EN LUGAR DE CANVAS
        TAMBIEN DESCOMENTAR UNA LINEA EN EL HTML DE SALAS
     */
-    //   const divBoard = document.querySelector("#board");
-    //   while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+    // const divBoard = document.querySelector("#board");
+    // while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
 
-    //   for (let i = 0; i < game.cells; i++) {
-    //     const b = document.createElement("button");
-    //     b.id = `cell${i + 1}`;
-    //     b.tag = i + 1;
-    //     b.className = "cell";
-    //     b.textContent = i + 1;
-    //     b.addEventListener("click", (e) => {
-    //       b.style.background = playerColor;
-    //       const payload = {
-    //         clientId: clientId,
-    //         gameId: gameId,
-    //         cellId: b.tag,
-    //         color: playerColor,
-    //       };
-    //       socket.emit("play", payload);
-    //     });
-    //     divBoard.appendChild(b);
-    //   }
-    //   divGame.appendChild(divBoard);
+    // for (let i = 0; i < game.cells; i++) {
+    //   const b = document.createElement("button");
+    //   b.id = `cell${i + 1}`;
+    //   b.tag = i + 1;
+    //   b.className = "cell";
+    //   b.addEventListener("click", (e) => {
+    //     b.style.background = playerColor;
+    //     b.setAttribute("disabled", true);
+    //     const payload = {
+    //       clientId: clientId,
+    //       gameId: gameId,
+    //       cellId: b.tag,
+    //       color: playerColor,
+    //     };
+    //     socket.emit("play", payload);
+    //   });
+    //   divBoard.appendChild(b);
+    // }
+    // divGame.appendChild(divBoard);
     /* END BLOQUE */
   });
 
@@ -260,11 +261,37 @@ if (!localStorage.getItem("sesionUser")) {
   socket.on("update", (game) => {
     //{1: "red", 2: "blue"}
     if (!game.state) return;
+
+    // Actualiza los marcadores
+    game.players.forEach((player) => {
+      const scoreEl = document.getElementById(player.playerId);
+      scoreEl.textContent = `Celdas: ${player.score}`;
+    });
+
+    // Actualiza el tablero
     const { state } = game;
     for (const cell of Object.keys(state)) {
       const color = state[cell];
       const cellObject = document.getElementById("cell" + cell);
       cellObject.style.backgroundColor = color;
+      cellObject.setAttribute("disabled", true);
+    }
+  });
+
+  // SE RECIBE CUANDO YA NO HAY MAS CASILLAS POR MARCAR
+  socket.on("finishGame", (players) => {
+    const titleEl = document.getElementById("game-title");
+    const scorePlayer = players[0].score;
+    const scoreOpponent = players[1].score;
+
+    if (scorePlayer > scoreOpponent) {
+      const { info, score } = players[0];
+      titleEl.textContent = `🎉 ${info.name} gana con ${score} celdas conquistadas 🎉`;
+    } else if (scoreOpponent > scorePlayer) {
+      const { info, score } = players[1];
+      titleEl.textContent = `🎉 ${info.name} gana con ${score} celdas conquistadas 🎉`;
+    } else {
+      titleEl.textContent = "Enhorabuena! Habeis empatado.";
     }
   });
 
