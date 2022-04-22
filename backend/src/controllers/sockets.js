@@ -13,7 +13,7 @@ module.exports = (io) => {
       // Crea el objeto game y lo guarda en la constante 'games'
       games[gameId] = {
         id: gameId,
-        cells: 20,
+        cells: 36,
         players: [],
       };
 
@@ -28,7 +28,24 @@ module.exports = (io) => {
      * Un usuario se quiere unir a una partida
      */
     socket.on("join", (payload) => {
-      const { clientId, gameId } = payload;
+      const colors1 = [
+        "#8464c6",
+        "#3d375e7f",
+        "#54c59f",
+        "#c7a06f",
+        "#c17ac8",
+        "#6cb2c7",
+      ];
+
+      const colors2 = [
+        "#c55858",
+        "#a277ff",
+        "#61ffca",
+        "#f694ff",
+        "#82e2ff",
+        "#ff6767",
+      ];
+      const { clientId, gameId, playerInfo } = payload;
 
       // busca la partida con el id recibido del cliente
       const game = games[gameId];
@@ -38,12 +55,15 @@ module.exports = (io) => {
         return;
       }
       // asigna un color random al jugador dependiendo de su index en el array
-      const color = { 0: "#D74CF6", 1: "#236CF7" }[game?.players?.length];
+      const color = { 0: getRandomColor(colors1), 1: getRandomColor(colors2) }[
+        game?.players?.length
+      ];
 
       // añade un jugador a una partida
       game.players.push({
         playerId: clientId,
         color,
+        info: playerInfo,
       });
 
       if (game.players.length === 1)
@@ -51,24 +71,26 @@ module.exports = (io) => {
 
       // empieza el juego cuando hay dos jugadores
       if (game.players.length === 2) {
+        console.log("empieza");
         game.players.forEach((player) => {
           const { connection } = clients[player.playerId];
           connection.emit("gameStart");
         });
+
+        // Itera cada jugador de la partida para notificar la union de un nuevo jugador
+        game.players.forEach((player) => {
+          const { connection } = clients[player.playerId];
+          connection.emit("join", game);
+        });
+
         updateGameState();
       }
-
-      // Itera cada jugador de la partida para notificar la union de un nuevo jugador
-      game.players.forEach((player) => {
-        const { connection } = clients[player.playerId];
-        connection.emit("join", game);
-      });
     });
 
     // Un jugador juega
     socket.on("play", (payload) => {
       console.log("payload play", payload);
-      const { clientId, gameId, cellId, color } = payload;
+      const { gameId, cellId, color } = payload;
 
       /**
        * Añade una state propiedad al objeto game, guardar el id de la casilla y el color
@@ -119,6 +141,11 @@ const updateGameState = () => {
   }
 
   setTimeout(updateGameState, 500);
+};
+
+// DEVUELVE UN COLOR RANDOM DE LOS COLORES QUE RECIBE POR PARAM
+const getRandomColor = (colors) => {
+  return colors[(Math.random() * colors.length) | 0];
 };
 
 function S4() {
