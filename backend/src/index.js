@@ -26,6 +26,10 @@ app.use(express.static(path.join((__dirname, "../frontend/src/"))));
 app.use(express.json());
 app.use("/users", users);
 
+// Definicion carpeta vista y uso de pug como motor de renderizacion
+app.set("views", path.join((__dirname, "../frontend/src/html")));
+app.set("view engine", "pug");
+
 // Ruta principal de nuestra aplicacion
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/html/", "home.html"));
