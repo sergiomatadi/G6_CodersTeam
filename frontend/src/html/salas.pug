@@ -1,0 +1,76 @@
+doctype html
+html(lang='es')
+  head
+    meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    script(src='https://code.jquery.com/jquery-1.12.4.min.js', integrity='sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=', crossorigin='anonymous')
+    script.
+      $(document).ready(function () {
+      $("#hide").click(function () {
+      $(".sala-elegida").hide();
+      });
+      $("#show").click(function () {
+      $(".sala-elegida").show();
+      });
+      });
+    // BOOTSTRAP CSS
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css', rel='stylesheet', integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC', crossorigin='anonymous')
+    // LOCAL CSS
+    link(rel='stylesheet', href='../css/globalStyle.css')
+    link(rel='stylesheet', href='../css/salas.css')
+    title Salas
+  body
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+      .container-fluid
+        a.navbar-brand(href='#') CODERSTEAM
+        span.navbar-text
+          | &iexcl;Hola 
+          span#username
+        #logout.volver
+          button.d-inline-flex.justify-content-center.btn.btn-outline-secondary(type='button')
+            | &#x2B05;&#xFE0F; SALIR
+    #salas.salas-container
+      // Botones para ocultar Sala, mostrar Sala y Volver para seleccionar avatar
+      .d-flex.flex-row.justify-content-center.my-5
+        div
+          button#hide.d-inline-flex.btn.btn-secondary(type='button')
+            | Ocultar Sala
+        div
+          button#show.d-inline-flex.btn.btn-primary.mx-3(type='button')
+            | Mostrar Sala
+        #volver.volver
+          a.text-dark(href='/avatar')
+            button.d-inline-flex.justify-content-center.btn.btn-danger(type='button')
+              | VOLVER
+      // Texto sala elegida
+      .sala-elegida
+        h2
+          | Sala Elegida:
+          p#elegida.d-inline-flex
+      #divPlayers
+      #divBoard
+      // Container avatar y containers salas
+      .container-avatar
+        img#avatar.avatar(draggable='true', ondragstart='drag(event)', src='')
+      .container.mb-5
+        #waitPlayer.waitPlayer-container.text-center
+          h2
+            | La partida empezara cuando se una otro jugador. Sera cuestion de segundos...&#x23F1;
+        #toMuchPlayersContainer.tooMuchPlayers-container.text-center
+          h2
+            | En esta sala ya estan completos &#x1F62D;
+            p Quizas podr&iacute;as crear una nueva sala &#x1F4AA;
+        button#createGameButton.btn.btn-info.w-25.m-auto.mb-5(type='button')
+          | Crear nueva Sala
+        #noGameContainer.noGames-container
+          h2 &#x26D4;&#xFE0F; Ahora mismo no se encuentra ninguna sala abierta &#x26D4;&#xFE0F;
+        #divGames
+    #game.game-container.mt-5
+      h1#game-title.text-center &#x1F525; Hora de la verdad &#x1F525;
+      #players.players-container.w-100.my-5
+      // DESCOMENTAR LA SIGUIENTE LINEA SI QUIERES TESTEAR LOS BOTONES EN LUGAR DEL CANVAS
+      // <div id="board" class="board-container mb-5"></div>
+    // Enlace JavaScript
+    script(src='/socket.io/socket.io.js')
+    script(src='../js/salas.js')
