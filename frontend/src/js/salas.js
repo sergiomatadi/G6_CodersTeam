@@ -179,12 +179,14 @@ if (!localStorage.getItem("sesionUser")) {
       create = true;
       canvas = document.createElement("canvas");
       canvas.id = "canvas";
+      canvas.width = "300";
+      canvas.height = "300";
     }
     
     var ctx = canvas.getContext("2d");
     ctx.lineWidth = 1;
     ctx.strokeStyle = playerColor;
-
+    
     for (var i = 0; i < aCells.length; i++) {
       var rect = aCells[i];
       if (rect.isFilled) {
@@ -305,6 +307,13 @@ if (!localStorage.getItem("sesionUser")) {
       }
       renderCanvas();
     }
+    // CALCULA LA POSICION DEL CANVAS ON WINDOW RESIZE
+    window.addEventListener("resize", function(){
+      canvasOffset = document.getElementById('canvas').getBoundingClientRect();
+      offsetX = canvasOffset.left;
+      offsetY = canvasOffset.top;
+    }, true);
+
     // EVENT LISTENER AL CLICKAR EN EL CANVAS
     document.getElementById("canvas").addEventListener("click", function(e) {
       onCanvasClick(e)
@@ -387,7 +396,7 @@ if (!localStorage.getItem("sesionUser")) {
   });
 
   // SE RECIBE CUANDO YA NO HAY MAS CASILLAS POR MARCAR
-  socket.on("finishGame", (players) => {
+  socket.on("finishGame", (players, game) => {
     const titleEl = document.getElementById("game-title");
     const scorePlayer = players[0].score;
     const scoreOpponent = players[1].score;

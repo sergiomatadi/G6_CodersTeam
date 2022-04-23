@@ -150,7 +150,7 @@ const updateGameState = () => {
   }
 };
 
-const isFinishGame = (state) => state && Object.keys(state).length === 18;
+const isFinishGame = (state) => state && Object.keys(state).length === 36;
 
 // DEVUELVE UN COLOR RANDOM DE LOS COLORES QUE RECIBE POR PARAM
 const getRandomColor = (colors) => {
