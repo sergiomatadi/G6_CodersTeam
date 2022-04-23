@@ -9,6 +9,7 @@ if (!localStorage.getItem("sesionUser")) {
   let clientId = null;
   let gameId = null;
   let playerColor = null;
+  let aCells = [];
 
   // ELEMENTOS PARA LAS SALAS
   const divGames = document.getElementById("divGames");
@@ -98,6 +99,8 @@ if (!localStorage.getItem("sesionUser")) {
     ev.target.style.opacity = "1";
     salaElegida(payload);
   }
+
+  
 
   // Este bloque cambia la opacidad de la sala cuando el avatar abandona la mitad del recuadro de sala.
   // Ademas extrae y borra lo que contiene el elemento con id elegida, es decir la sala elegida.
@@ -211,22 +214,111 @@ if (!localStorage.getItem("sesionUser")) {
     // TODO: AÑADIR LOS EVENTOS ONCLICK EN CADA UNA DE LAS CELDAS
     const canvas = document.createElement("canvas");
     canvas.id = "canvas";
-    canvas.style.width = "502px";
-    canvas.style.height = "502px";
-
+    //canvas.style.width = "502px";
+    //canvas.style.height = "502px";
+    
     var ctx = canvas.getContext("2d");
+    var lastHit = {};
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "#3d375e7f";
-
+    ctx.strokeStyle = playerColor;
+    
+    /////////////////////////////////
+    let id= 1;
+    // CREAMOS LA INFORMACION DE LAS CELDAS EN UNA ARRAY (aCells)
     for (var i = 0; i < 6; i++) {
       for (var j = 0; j < 6; j++) {
-        ctx.beginPath();
-        ctx.rect(50 * i, 25 * j, 50, 25);
-        ctx.stroke();
+        aCells.push({
+          id: id,
+          posx: j,
+          posy: i,
+          x: 50 * j,
+          y: 50 * i,
+          width: 50,
+          height: 50,
+          fillColor: playerColor,
+          isFilled: false,
+        });
+        id++;
       }
     }
 
+    drawCells();
+
+    // FUNCION PARA RENDERIZAR LAS CELDAS SEGUN LA INFORMACION DEL ARRAY aCells
+    function drawCells() {
+      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < aCells.length; i++) {
+        var rect = aCells[i];
+        if (rect.isFilled) {
+            ctx.fillStyle = rect.fillColor;
+            ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+        ctx.strokeStyle = "black";
+        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+      }
+    }
+    
+    // FUNCION QUE INDICA CUAL DE LAS CELDAS HA SIDO CLICKADA
+    function hit(rect, x, y) {
+      return (x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height);
+    }
+
+    // FUNCTION QUE INDICA SI EL CLICK ES VALIDO SEGUN LAS REGLAS DEL JUEGO
+    function validHit(rect) {
+      var closeCell = true;
+      if ( lastHit.posx !== undefined  ) {
+        closeCell = Math.abs(rect.posx - lastHit.posx) <= 1 && Math.abs(rect.posy - lastHit.posy) <=1;
+      }
+      return( (lastHit.posx === undefined || closeCell ) && rect.isFilled === false );
+    }
+
     divGame.appendChild(canvas);
+    
+    // PARA SABER LA POSICION DEL CANVAS
+    var canvasOffset = document.getElementById('canvas').getBoundingClientRect();
+    var offsetX = canvasOffset.left;
+    var offsetY = canvasOffset.top;
+
+    // EVENTO QUE SE LLAMA AL CLICKAR
+    function onCanvasClick(e) {
+      e.preventDefault();
+      let mouseX = parseInt(e.clientX - offsetX);
+      let mouseY = parseInt(e.clientY - offsetY);
+      for (var i = 0; i < aCells.length; i++) {
+          var rect = aCells[i];
+          if (hit(rect, mouseX, mouseY) && validHit(rect)) {
+            lastHit = rect;
+            rect.isFilled = !rect.isFilled;
+            // EMITIMOS LOS DATOS AL SOCKET
+            const payload = {
+              clientId: clientId,
+              gameId: gameId,
+              cellId: rect.id,
+              color: playerColor,
+            };
+            socket.emit("play", payload);
+          }
+      }
+      drawCells();
+    }
+    // EVENT LISTENER AL CLICKAR EN EL CANVAS
+    document.getElementById("canvas").addEventListener("click", function(e) {
+      onCanvasClick(e)
+    });
+
+    ////////////////////////////////
+
+    /*for (var i = 0; i < 6; i++) {
+      for (var j = 0; j < 6; j++) {
+         
+        ctx.beginPath();
+        ctx.rect(50 * i, 25 * j, 50, 25);
+
+        ctx.stroke();
+      }
+    }*/
+
+    //divGame.appendChild(canvas);
     /* END PARA COMENTAR */
 
     /* DESCOMENTAR ESTE BLOQUE PARA TESTEAR EL JUEGO CON BOTONES EN LUGAR DE CANVAS
@@ -264,18 +356,31 @@ if (!localStorage.getItem("sesionUser")) {
 
     // Actualiza los marcadores
     game.players.forEach((player) => {
+      
       const scoreEl = document.getElementById(player.playerId);
       scoreEl.textContent = `Celdas: ${player.score}`;
     });
 
     // Actualiza el tablero
     const { state } = game;
-    for (const cell of Object.keys(state)) {
+    
+    //Actualiza el tablero con Canvas
+    for(var i = 0; i<aCells.length; i++) {
+      if (game.state[i+1] !== undefined) {
+        aCells[i].isFilled = true;
+        aCells[i].fillColor = game.state[i+1];
+      }
+    }
+    let canvas = document.getElementById('canvas');
+    
+
+    // Actualiza el tablero con botones
+    /*for (const cell of Object.keys(state)) {
       const color = state[cell];
       const cellObject = document.getElementById("cell" + cell);
       cellObject.style.backgroundColor = color;
       cellObject.setAttribute("disabled", true);
-    }
+    }*/
   });
 
   // SE RECIBE CUANDO YA NO HAY MAS CASILLAS POR MARCAR
