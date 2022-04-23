@@ -139,7 +139,7 @@ const updateGameState = () => {
       connection.emit("update", game);
     });
   }
-
+  
   if (isFinishGame(game.state)) {
     game.players.forEach((player) => {
       const { connection } = clients[player.playerId];
@@ -150,7 +150,7 @@ const updateGameState = () => {
   }
 };
 
-const isFinishGame = (state) => state && Object.keys(state).length === 36;
+const isFinishGame = (state) => state && Object.keys(state).length === 18;
 
 // DEVUELVE UN COLOR RANDOM DE LOS COLORES QUE RECIBE POR PARAM
 const getRandomColor = (colors) => {

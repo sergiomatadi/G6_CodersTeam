@@ -170,6 +170,36 @@ if (!localStorage.getItem("sesionUser")) {
     }, 5000);
   });
 
+ // FUNCION PARA RENDERIZAR LAS CELDAS SEGUN LA INFORMACION DEL ARRAY aCells
+  function renderCanvas() {
+    var canvas = document.getElementsByTagName('canvas')[0];
+    const divGame = document.querySelector("#game");
+    var create = false;
+    if( typeof(canvas) === "undefined") {
+      create = true;
+      canvas = document.createElement("canvas");
+      canvas.id = "canvas";
+    }
+    
+    var ctx = canvas.getContext("2d");
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = playerColor;
+
+    for (var i = 0; i < aCells.length; i++) {
+      var rect = aCells[i];
+      if (rect.isFilled) {
+          ctx.fillStyle = rect.fillColor;
+          ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+      }
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+    }
+    if(create === true) {
+      create = false;
+      divGame.appendChild(canvas);
+    }
+  }
+
   socket.on("join", (game) => {
     if (!game) return; // si game no existe, no entra el juego
 
@@ -212,17 +242,8 @@ if (!localStorage.getItem("sesionUser")) {
     const divGame = document.querySelector("#game");
     /* COMENTAR ESTE CODIGO SI QUEREIS TESTEAR LOS BOTONES EN LUGAR DEL CANVAS */
     // TODO: AÑADIR LOS EVENTOS ONCLICK EN CADA UNA DE LAS CELDAS
-    const canvas = document.createElement("canvas");
-    canvas.id = "canvas";
-    //canvas.style.width = "502px";
-    //canvas.style.height = "502px";
-    
-    var ctx = canvas.getContext("2d");
+
     var lastHit = {};
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = playerColor;
-    
-    /////////////////////////////////
     let id= 1;
     // CREAMOS LA INFORMACION DE LAS CELDAS EN UNA ARRAY (aCells)
     for (var i = 0; i < 6; i++) {
@@ -241,23 +262,8 @@ if (!localStorage.getItem("sesionUser")) {
         id++;
       }
     }
+    renderCanvas();
 
-    drawCells();
-
-    // FUNCION PARA RENDERIZAR LAS CELDAS SEGUN LA INFORMACION DEL ARRAY aCells
-    function drawCells() {
-      //ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (var i = 0; i < aCells.length; i++) {
-        var rect = aCells[i];
-        if (rect.isFilled) {
-            ctx.fillStyle = rect.fillColor;
-            ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-        }
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-      }
-    }
-    
     // FUNCION QUE INDICA CUAL DE LAS CELDAS HA SIDO CLICKADA
     function hit(rect, x, y) {
       return (x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height);
@@ -272,8 +278,6 @@ if (!localStorage.getItem("sesionUser")) {
       return( (lastHit.posx === undefined || closeCell ) && rect.isFilled === false );
     }
 
-    divGame.appendChild(canvas);
-    
     // PARA SABER LA POSICION DEL CANVAS
     var canvasOffset = document.getElementById('canvas').getBoundingClientRect();
     var offsetX = canvasOffset.left;
@@ -299,7 +303,7 @@ if (!localStorage.getItem("sesionUser")) {
             socket.emit("play", payload);
           }
       }
-      drawCells();
+      renderCanvas();
     }
     // EVENT LISTENER AL CLICKAR EN EL CANVAS
     document.getElementById("canvas").addEventListener("click", function(e) {
@@ -371,8 +375,7 @@ if (!localStorage.getItem("sesionUser")) {
         aCells[i].fillColor = game.state[i+1];
       }
     }
-    let canvas = document.getElementById('canvas');
-    
+    renderCanvas();
 
     // Actualiza el tablero con botones
     /*for (const cell of Object.keys(state)) {
