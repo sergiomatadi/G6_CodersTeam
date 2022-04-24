@@ -209,51 +209,51 @@ if (!localStorage.getItem("sesionUser")) {
     const divGame = document.querySelector("#game");
     /* COMENTAR ESTE CODIGO SI QUEREIS TESTEAR LOS BOTONES EN LUGAR DEL CANVAS */
     // TODO: AÑADIR LOS EVENTOS ONCLICK EN CADA UNA DE LAS CELDAS
-    const canvas = document.createElement("canvas");
-    canvas.id = "canvas";
-    canvas.style.width = "502px";
-    canvas.style.height = "502px";
+    // const canvas = document.createElement("canvas");
+    // canvas.id = "canvas";
+    // canvas.style.width = "502px";
+    // canvas.style.height = "502px";
 
-    var ctx = canvas.getContext("2d");
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "#3d375e7f";
+    // var ctx = canvas.getContext("2d");
+    // ctx.lineWidth = 1;
+    // ctx.strokeStyle = "#3d375e7f";
 
-    for (var i = 0; i < 6; i++) {
-      for (var j = 0; j < 6; j++) {
-        ctx.beginPath();
-        ctx.rect(50 * i, 25 * j, 50, 25);
-        ctx.stroke();
-      }
-    }
+    // for (var i = 0; i < 6; i++) {
+    //   for (var j = 0; j < 6; j++) {
+    //     ctx.beginPath();
+    //     ctx.rect(50 * i, 25 * j, 50, 25);
+    //     ctx.stroke();
+    //   }
+    // }
 
-    divGame.appendChild(canvas);
+    // divGame.appendChild(canvas);
     /* END PARA COMENTAR */
 
     /* DESCOMENTAR ESTE BLOQUE PARA TESTEAR EL JUEGO CON BOTONES EN LUGAR DE CANVAS
        TAMBIEN DESCOMENTAR UNA LINEA EN EL HTML DE SALAS
     */
-    // const divBoard = document.querySelector("#board");
-    // while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
+    const divBoard = document.querySelector("#board");
+    while (divBoard.firstChild) divBoard.removeChild(divBoard.firstChild);
 
-    // for (let i = 0; i < game.cells; i++) {
-    //   const b = document.createElement("button");
-    //   b.id = `cell${i + 1}`;
-    //   b.tag = i + 1;
-    //   b.className = "cell";
-    //   b.addEventListener("click", (e) => {
-    //     b.style.background = playerColor;
-    //     b.setAttribute("disabled", true);
-    //     const payload = {
-    //       clientId: clientId,
-    //       gameId: gameId,
-    //       cellId: b.tag,
-    //       color: playerColor,
-    //     };
-    //     socket.emit("play", payload);
-    //   });
-    //   divBoard.appendChild(b);
-    // }
-    // divGame.appendChild(divBoard);
+    for (let i = 0; i < game.cells; i++) {
+      const b = document.createElement("button");
+      b.id = `cell${i + 1}`;
+      b.tag = i + 1;
+      b.className = "cell";
+      b.addEventListener("click", (e) => {
+        b.style.background = playerColor;
+        b.setAttribute("disabled", true);
+        const payload = {
+          clientId: clientId,
+          gameId: gameId,
+          cellId: b.tag,
+          color: playerColor,
+        };
+        socket.emit("play", payload);
+      });
+      divBoard.appendChild(b);
+    }
+    divGame.appendChild(divBoard);
     /* END BLOQUE */
   });
 
