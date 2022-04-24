@@ -300,6 +300,8 @@ if (!localStorage.getItem("sesionUser")) {
               clientId: clientId,
               gameId: gameId,
               cellId: rect.id,
+              cellX: rect.posx, // se le pasa la posicion x de la casilla
+              cellY: rect.posy, // se le pasa la posicion y de la casilla
               color: playerColor,
             };
             socket.emit("play", payload);
@@ -313,6 +315,14 @@ if (!localStorage.getItem("sesionUser")) {
       offsetX = canvasOffset.left;
       offsetY = canvasOffset.top;
     }, true);
+
+    // CALCULA LA POSICION DEL CANVAS ON WINDOW SCROLL
+    window.addEventListener("scroll", function(){
+      canvasOffset = document.getElementById('canvas').getBoundingClientRect();
+      offsetX = canvasOffset.left;
+      offsetY = canvasOffset.top;
+    }, true);
+
 
     // EVENT LISTENER AL CLICKAR EN EL CANVAS
     document.getElementById("canvas").addEventListener("click", function(e) {
@@ -360,6 +370,11 @@ if (!localStorage.getItem("sesionUser")) {
     // }
     // divGame.appendChild(divBoard);
     /* END BLOQUE */
+  });
+
+  //SACAR UNA VEZ ESTÉ LA COMPORBACION EN SOCKET DE LAS CASILLAS POR CLICKAR
+  socket.on("updateBoard", (board, lastClick1, lastClick2) => {
+    console.log(board, lastClick1, lastClick2);
   });
 
   // ACTUALIZA EL JUEGO

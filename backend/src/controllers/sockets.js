@@ -1,7 +1,12 @@
 const clients = {}; // Objeto con los jugadores conectados
 const games = {}; // Objeto con las partidas creadas
 
+let currentGame = [[],[],[],[],[],[]]; //copia ddel estado del tablero
+let lastClickPlayer1 = {}; //ultima casilla clicada por el jugador1
+let lastClickPlayer2 = {}; //ultima casilla clicada por el jugador2
+
 module.exports = (io) => {
+  
   // socket connection
   io.on("connection", (socket) => {
     /*
@@ -28,6 +33,7 @@ module.exports = (io) => {
      * Un usuario se quiere unir a una partida
      */
     socket.on("join", (payload) => {
+      currentGame = [[],[],[],[],[],[]];
       const colors1 = [
         "#8464c6",
         "#3d375e7f",
@@ -89,8 +95,35 @@ module.exports = (io) => {
     // Un jugador juega
     socket.on("play", (payload) => {
       console.log("payload play", payload);
-      const { gameId, cellId, color } = payload;
+      const { clientId, gameId, cellId, cellX, cellY, color } = payload;
+      
+  // Se intenta tener unos datos para poder ver si habrá mas casillas disponibles para clickar  
+  //Algo no funciona bien.  
+  //clientId será para identificar quien ha clickado esa casilla.
+  //cellX será para identificar la posicion x de esa casilla (0,1,2,3,4...)
+  //cellY será para identifi ar la poisicion y de esa casilla
+  // cellx y cellY serán: 0,0 --> para la primera casilla, 0,1--> para la segunda,...
 
+      const cellData = {
+        clientId: clientId,
+        x: cellX,
+        y: cellY
+      };
+      //ALGO FALLA EN ESTE IF QUE HACE QUE LA APLICACION NO TIRE BIEN
+      // La idea es guardar en las lastchild la casilla ultima de cada jugador,
+      // que luego se usará en la funcion unableToClickMore para ver las casillas de alrededor 
+      // y comprobar si hay alguna que no esté clickada
+      if ( lastClickPlayer1 === {} || lastClickPlayer1.clientId === clientId ) { 
+        //lastClickPlayer1 = JSON.parse(JSON.stringify(cellData));
+      } else {
+        //lastClickPlayer2 = JSON.parse(JSON.stringify(cellData));
+      }
+      currentGame[cellX][cellY] = clientId;
+      
+      //ESTO ES PARA VER EN CONSOLA LOS DATOS QUE HAY 
+      socket.emit("updateBoard", currentGame, lastClickPlayer1, lastClickPlayer2);
+      
+  ///////////////////////   
       /**
        * Añade una state propiedad al objeto game, guardar el id de la casilla y el color
        * ejemplo:
@@ -140,7 +173,7 @@ const updateGameState = () => {
     });
   }
   
-  if (isFinishGame(game.state)) {
+  if (isFinishGame(game.state) /*|| unableToClickMore()*/) {
     game.players.forEach((player) => {
       const { connection } = clients[player.playerId];
       connection.emit("finishGame", game.players);
@@ -149,6 +182,21 @@ const updateGameState = () => {
     setTimeout(updateGameState, 500);
   }
 };
+
+//FUNCION QUE DICTAMINA SI HAY MAS CELDAS A LAS QUE PODER CLICKAR 
+/*const unableToClickMore = () => {
+  for(var i=-1; i<=1; i++) {
+    for(var j=0; j<=1; j++) {
+      if( (lastClickPlayer1.x)+i >=0 && (lastClickPlayer1.y)+j >=0 && currentGame[(lastClickPlayer1.x)+i][(lastClickPlayer1.y)+j] === null ) {
+        return false;
+      }
+      if( (lastClickPlayer2.x)+i >=0 && (lastClickPlayer2.y)+j >=0 && currentGame[(lastClickPlayer2.x)+i][(lastClickPlayer2.y)+j] === null ) {
+        return false;
+      }
+    }
+  }
+  return true;
+};*/
 
 const isFinishGame = (state) => state && Object.keys(state).length === 36;
 
