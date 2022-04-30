@@ -28,20 +28,25 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const user = new User({
-  id: "123",
-  name: "Jordi",
-  email: "jordi@gmail.com",
-  password: "1234",
-  avatar: {},
-});
+// User.find({}).then(result => {
+//   console.log(result)
+//   mongoose.connection.close()
+// });
 
-user
-  .save()
-  .then((result) => {
-    console.log(result);
-    mongoose.connection.close();
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+// const user = new User({
+//   id: "123",
+//   name: "Jordi",
+//   email: "jordi@gmail.com",
+//   password: "1234",
+//   avatar: {},
+// });
+
+// user
+//   .save()
+//   .then((result) => {
+//     console.log(result);
+//     mongoose.connection.close();
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
