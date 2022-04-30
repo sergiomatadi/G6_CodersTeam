@@ -1,10 +1,21 @@
 const users = require("./controllers/users"); // MODULO DE USERS
 const salas = require("./controllers/sala"); // MODULE SALAS
 const sockets = require("./controllers/sockets"); // MODULO SOCKET
+
+//mongo
+// require('./mongo');
 // Express
 const express = require("express");
 const path = require("path");
 const app = express();
+app.use('/api/register', require('./routes/registerRoute'))
+//Primera ruta de api de Register
+
+
+//mongo
+// const User = require('./models/user');
+
+
 
 // Requiere http server porque sera el http server el que se le pasara a socket
 const server = require("http").Server(app);
@@ -37,12 +48,14 @@ app.get("/", (req, res) => {
 });
 
 // Ruta vista del formulario registro
-app.get("/register", (req, res) => {
-  res.render("register");
-  //res.sendFile(
-  //  path.join(__dirname, "../../frontend/src/html/", "register.html")
-  //);
-});
+// app.get("/api/register", (req, res) => {
+//   res.render("register");
+//   //res.sendFile(
+//   //  path.join(__dirname, "../../frontend/src/html/", "register.html")
+//   //);
+// });
+
+
 
 // Ruta vista del formulario login
 app.get("/login", (req, res) => {
@@ -64,3 +77,4 @@ app.get("/avatar", (req, res) => {
   res.render("avatar");
   // res.sendFile(path.join(__dirname, "../../frontend/src/html/", "avatar.html"));
 });
+
