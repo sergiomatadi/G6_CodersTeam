@@ -6,6 +6,9 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
+// Mongoose
+const mongoose = require("mongoose");
+
 // Requiere http server porque sera el http server el que se le pasara a socket
 const server = require("http").Server(app);
 
