@@ -1,6 +1,11 @@
+// Mongodb
+require("./mongo");
+const User = require("./models/User");
+
 const users = require("./controllers/users"); // MODULO DE USERS
 const salas = require("./controllers/sala"); // MODULE SALAS
 const sockets = require("./controllers/sockets"); // MODULO SOCKET
+
 // Express
 const express = require("express");
 const path = require("path");
