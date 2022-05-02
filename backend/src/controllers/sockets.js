@@ -114,9 +114,17 @@ module.exports = (io) => {
       // que luego se usará en la funcion unableToClickMore para ver las casillas de alrededor 
       // y comprobar si hay alguna que no esté clickada
       if ( lastClickPlayer1 === {} || lastClickPlayer1.clientId === clientId ) { 
-        //lastClickPlayer1 = JSON.parse(JSON.stringify(cellData));
+        lastClickPlayer1 = {
+          clientId: clientId,
+          x: cellX,
+          y: cellY,
+        };
       } else {
-        //lastClickPlayer2 = JSON.parse(JSON.stringify(cellData));
+        lastClickPlayer2 = {
+          clientId: clientId,
+          x: cellX,
+          y: cellY,
+        };
       }
       currentGame[cellX][cellY] = clientId;
       
@@ -172,8 +180,8 @@ const updateGameState = () => {
       connection.emit("update", game);
     });
   }
-  
-  if (isFinishGame(game.state) /*|| unableToClickMore()*/) {
+
+  if (isFinishGame(game.state) || (unableToClickMore(lastClickPlayer1) && unableToClickMore(lastClickPlayer2) )) {
     game.players.forEach((player) => {
       const { connection } = clients[player.playerId];
       connection.emit("finishGame", game.players);
@@ -184,19 +192,23 @@ const updateGameState = () => {
 };
 
 //FUNCION QUE DICTAMINA SI HAY MAS CELDAS A LAS QUE PODER CLICKAR 
-/*const unableToClickMore = () => {
+function unableToClickMore (player) {
+  console.log('ENTRO UNABLE');
+  if(Object.keys(player).length === 0) {
+    console.log('ENTRO IF');
+    return false;
+  }
   for(var i=-1; i<=1; i++) {
-    for(var j=0; j<=1; j++) {
-      if( (lastClickPlayer1.x)+i >=0 && (lastClickPlayer1.y)+j >=0 && currentGame[(lastClickPlayer1.x)+i][(lastClickPlayer1.y)+j] === null ) {
-        return false;
-      }
-      if( (lastClickPlayer2.x)+i >=0 && (lastClickPlayer2.y)+j >=0 && currentGame[(lastClickPlayer2.x)+i][(lastClickPlayer2.y)+j] === null ) {
+    for(var j=-1; j<=1; j++) {
+      if( (player.x)+i >=0 && (player.y)+j >=0 && (player.x)+i <6 && (player.y)+j <6 && currentGame[(player.x)+i][(player.y)+j] === undefined ) {
+        console.log('ENTRO IF2');
         return false;
       }
     }
   }
+  console.log('SALGO');
   return true;
-};*/
+};
 
 const isFinishGame = (state) => state && Object.keys(state).length === 36;
 

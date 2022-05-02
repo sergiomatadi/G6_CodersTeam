@@ -374,7 +374,10 @@ if (!localStorage.getItem("sesionUser")) {
 
   //SACAR UNA VEZ ESTÉ LA COMPORBACION EN SOCKET DE LAS CASILLAS POR CLICKAR
   socket.on("updateBoard", (board, lastClick1, lastClick2) => {
-    console.log(board, lastClick1, lastClick2);
+    console.log(board);
+    console.log( lastClick1);
+    console.log( lastClick2);
+    debugger;
   });
 
   // ACTUALIZA EL JUEGO
