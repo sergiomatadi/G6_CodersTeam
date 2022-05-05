@@ -1,0 +1,6 @@
+PUT http://localhost:3001/users/6273c0c24d487e0416ab437a
+Content-Type: application/json
+
+{
+  "avatar": "../img/pirata.png"
+}
