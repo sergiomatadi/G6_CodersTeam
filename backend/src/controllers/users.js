@@ -13,59 +13,46 @@
  * '/users/get_opponent'
  */
 
-const URL = require("url");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const User = require("../models/User");
 
-// TODO: DEJAR EL ARRAY VACIO CUANDO SE VAYA A ENTREGAR
-const USERS = [
-  {
-    id: "fcNTjCTSOU",
-    name: "Homer",
-    email: "q",
-    password: "$2b$10$e30q7YghbQ1IYAXqDMh3s.DdDUSqObgd/4iFRZ/k92eL5hQ1y/w0W",
-    avatar: undefined,
-  },
-  {
-    id: "0uq04Aacdy",
-    name: "Bart",
-    email: "w",
-    password: "$2b$10$zC0jzR0BmdPD41hAl.3QcOivm0afHdspalt8OGxDjCadPdd9JbFTi",
-    avatar: undefined,
-  },
-];
 const TOKENS = [];
 
-/* METODO PARA REGISTRAR UN USUARIO */
-
+/* REGISTROR DE UN USUARIO */
 router.post("/", (req, res) => {
   const { name, email, password, avatar } = req.body;
 
   if (!name || !email || !password) {
-    return res.json({
+    res.status(400).json({
       ok: false,
       error: "No se han recibido los datos necesarios",
     });
+    return;
   }
   const hash = bcrypt.hashSync(password, 10);
   //reemplazamos el password con su versión encriptada
   req.body.password = hash;
 
-  const newUser = {
-    id: generate_string(),
+  const user = new User({
     name,
     email,
     password: req.body.password,
     avatar,
-  };
-  USERS.push(newUser);
-  console.log("USERS", USERS, USERS.length);
-  res.json({ ok: true, data: newUser });
+  });
+  user
+    .save()
+    .then((result) => {
+      res.json({ ok: true });
+    })
+    .catch((err) => {
+      res.status(500).json({ ok: false, error: "Error al registrar usuario" });
+      console.error("Error al registar usuario", err);
+    });
 });
 
 /* LOGUEA A UN USUARIO */
-
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -76,31 +63,27 @@ router.post("/login", (req, res) => {
       .json({ ok: false, error: "correo o contraseña no recibidos" });
   }
 
-  const user = USERS.filter((user) => user.email === email);
-
-  if (user.length === 1 && bcrypt.compareSync(password, user[0].password)) {
-    const token = generate_string(15);
-
-    const { id, email, name } = user[0];
-
-    const userWithToken = {
-      id,
-      email,
-      name,
-      token,
-    };
-
-    TOKENS.push(userWithToken);
-
-    res.json({ ok: true, data: userWithToken });
-  } else {
-    // si no coinciden pasamos msg de error
-    res.json({ ok: false, error: "Usuario o Contraseña incorrecta" });
-  }
+  // Busca user en la bd por el campo email (email es un campo unico)
+  User.findOne({ email })
+    .then((user) => {
+      if (!user)
+        return res
+          .status(400)
+          .json({ ok: false, error: "Usuario no existente!" });
+      if (user && bcrypt.compareSync(password, user.password)) {
+        res.json({ ok: true, data: user });
+      } else {
+        res
+          .status(400)
+          .json({ ok: false, error: "Usuario o Contraseña incorrecta" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error buscando usuarios", err);
+    });
 });
 
 /* METODO DELETE PARA HACER LOGOUT */
-
 router.delete("/logout", (req, res) => {
   const { token } = req.body;
 
@@ -116,84 +99,26 @@ router.delete("/logout", (req, res) => {
 });
 
 /* ACTUALIZA UN USUARIO */
-
 router.put("/:id", (req, res) => {
   const { avatar } = req.body;
-  const id = req.params.id;
+  const { id } = req.params;
 
-  const userToUpdate = USERS.filter((user) => user.id === id);
-
-  if (userToUpdate.length === 1) {
-    USERS.map((user) => {
-      if (user.id === id) {
-        return {
-          avatar,
-          ...user,
-        };
-      } else {
-        user;
+  User.findByIdAndUpdate(id, { avatar })
+    .then(() => {
+      res.json({ ok: true, data: "Avatar guardado correctamente" });
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).json({
+          ok: false,
+          data: `Error, id recibido mal formado.`,
+        });
       }
+      res.status(500).json({
+        ok: false,
+        data: `Error al actualizar usuario con id ${id}.`,
+      });
     });
-    return res.json({ ok: true, data: "Avatar guardado correctamente" });
-  } else {
-    return res.json({
-      ok: false,
-      error: `No se ha encontrado ningun usuario con este id ${id}`,
-    });
-  }
 });
-
-/* EXTERNAL FUNCTION PARA GENERAR RANDOMS STRINGS PARA ID's  */
-const generate_string = (length = 10) => {
-  let id = "";
-  const caracteresPossibles =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i = 0; i < length; i++) {
-    id += caracteresPossibles.charAt(
-      Math.floor(Math.random() * caracteresPossibles.length)
-    );
-  }
-  return id;
-};
-
-//       switch (pathName) {
-//         case "/users/get_opponent":
-//           console.log("request in route -->", url);
-//           try {
-//             const { user } = URL.parse(url, true).query;
-
-//             const statusCode = 200;
-
-//             const opponent = getOpponent(user);
-
-//             res.writeHead(statusCode, header);
-
-//             const resBody = {
-//               headers,
-//               method,
-//               url,
-//               statusCode,
-//               content: opponent,
-//             };
-
-//             res.write(JSON.stringify(resBody));
-//             res.end();
-//           } catch (error) {
-//             console.error(error);
-
-//             const statusCode = 500;
-
-//             res.writeHead(statusCode);
-//             res.end("Error de servidor");
-//           }
-//       }
-//   }
-// };
-
-// // saca un elemeto random del array de los users
-// const getOpponent = (nameUser) => {
-//   const possiblesOpponents = usersData.filter((el) => el.email !== nameUser);
-//   return possiblesOpponents[(Math.random() * possiblesOpponents.length) | 0];
-// };
 
 module.exports = router;
