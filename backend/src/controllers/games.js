@@ -35,8 +35,8 @@ router.get("/:id", (req, res) => {
 // OBTIENE TODAS LAS PARTIDAS GANADAS DE UN USER
 router.get("/won/:id", (req, res) => {
   const { id } = req.params;
-  const filter = { "winner.user": id };
-  Game.find(filter)
+  const filter = [{ "winner.user": id }, { isEqual: false }];
+  Game.find({ $and: filter })
     .populate("winner.user")
     .populate("looser.user")
     .then((games) => {
@@ -51,8 +51,8 @@ router.get("/won/:id", (req, res) => {
 // OBTIENE TODAS LAS PARTIDAS PERDIDAS DE UN USER
 router.get("/lost/:id", (req, res) => {
   const { id } = req.params;
-  const filter = { "looser.user": id };
-  Game.find(filter)
+  const filter = [{ "looser.user": id }, { isEqual: false }];
+  Game.find({ $and: filter })
     .populate("winner.user")
     .populate("looser.user")
     .then((games) => {
