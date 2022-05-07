@@ -153,13 +153,13 @@ const saveGame = (players, cells) => {
     cells,
     winner: {
       user: winner === 1 ? players[0].info.id : players[1].info.id,
-      color: winner === 1 ? players[0].info.id : players[1].color,
-      score: winner === 1 ? players[0].info.id : players[1].score,
+      color: winner === 1 ? players[0].color : players[1].color,
+      score: winner === 1 ? players[0].score : players[1].score,
     },
     looser: {
       user: winner === 1 ? players[1].info.id : players[0].info.id,
-      color: winner === 1 ? players[1].info.id : players[0].color,
-      score: winner === 1 ? players[1].info.id : players[0].score,
+      color: winner === 1 ? players[1].color : players[0].color,
+      score: winner === 1 ? players[1].score : players[0].score,
     },
     isEqual: winner === 0,
   });
