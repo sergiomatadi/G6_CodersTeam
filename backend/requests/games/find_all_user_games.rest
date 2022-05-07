@@ -1,0 +1,1 @@
+GET http://localhost:3001/api/games/6276b578f3746e9bfdc7e1ff

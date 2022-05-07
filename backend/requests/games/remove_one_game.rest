@@ -1,0 +1,1 @@
+DELETE http://localhost:3001/api/games/6276bb35b3795ab33ff7c59f
