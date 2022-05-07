@@ -2,6 +2,7 @@
 require("./mongo");
 
 const users = require("./controllers/users"); // MODULO DE USERS
+const games = require("./controllers/games"); // MODULO DE GAMES
 const sockets = require("./controllers/sockets"); // MODULO SOCKET
 
 // Express
@@ -28,6 +29,7 @@ sockets(io);
 app.use(express.static(path.join((__dirname, "../frontend/src/"))));
 app.use(express.json());
 app.use("/api/users", users);
+app.use("/api/games", games);
 
 // Definicion carpeta vista y uso de pug como motor de renderizacion
 app.set("views", path.join((__dirname, "../frontend/src/html")));
