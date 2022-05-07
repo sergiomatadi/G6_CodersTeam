@@ -29,10 +29,8 @@ if (!localStorage.getItem("sesionUser")) {
     clientId = data.clientId;
 
     while (divGames.firstChild) divGames.removeChild(divGames.firstChild);
-
     const { games } = data;
     const availabeGames = Object.keys(games);
-
     if (availabeGames.length === 0) {
       divNoGames.style.display = "flex"; // Informa de que no hay ninguna sala creada
     } else {
@@ -55,7 +53,6 @@ if (!localStorage.getItem("sesionUser")) {
             gameId: div.tag,
             playerInfo: sesionUser,
           };
-
           gameId = div.tag;
           drop(e, payload);
         });
@@ -261,7 +258,6 @@ if (!localStorage.getItem("sesionUser")) {
   socket.on("update", (game) => {
     //{1: "red", 2: "blue"}
     if (!game.state) return;
-
     // Actualiza los marcadores
     game.players.forEach((player) => {
       const scoreEl = document.getElementById(player.playerId);
