@@ -1,6 +1,6 @@
 const clients = {}; // Objeto con los jugadores conectados
 const games = {}; // Objeto con las partidas creadas
-
+const Game = require("../models/Game");
 module.exports = (io) => {
   // socket connection
   io.on("connection", (socket) => {
@@ -65,7 +65,6 @@ module.exports = (io) => {
         color,
         info: playerInfo,
       });
-
       if (game.players.length === 1)
         clients[clientId].connection.emit("waitPlayer");
 
@@ -88,11 +87,9 @@ module.exports = (io) => {
 
     // Un jugador juega
     socket.on("play", (payload) => {
-      console.log("payload play", payload);
       const { gameId, cellId, color } = payload;
-
       /**
-       * Añade una state propiedad al objeto game, guardar el id de la casilla y el color
+       * Añade una propiedad state al objeto game, guardar el id de la casilla y el color
        * ejemplo:
           state: {
             'idCasilla': 'color',
@@ -106,11 +103,8 @@ module.exports = (io) => {
 
       state[cellId] = color;
       games[gameId].state = state;
-
-      const game = games[gameId];
     });
 
-    // Genera un nuevo id para el nuevo cliente
     const clientId = guid();
 
     // Guarda el nuevo cliente con su id en la constante 'clients'
@@ -127,12 +121,12 @@ module.exports = (io) => {
   });
 };
 
-// Envia el stado de la partida actualizado cada 500ms
+// Envia el estado de la partida actualizado cada 500ms
 const updateGameState = () => {
   let game;
-  // Itera las keys del objeto games. ej: ['cells', 'players', 'state']
   for (const g of Object.keys(games)) {
     game = games[g];
+
     game.players.forEach((player) => {
       player.score = game.state && getScore(game.state, player.color);
       const { connection } = clients[player.playerId];
@@ -140,8 +134,11 @@ const updateGameState = () => {
     });
   }
 
-  if (isFinishGame(game.state)) {
-    game.players.forEach((player) => {
+  if (isFinishGame(game.state, game.cells)) {
+    const { players } = game;
+    saveGame(players, game.cells);
+
+    players.forEach((player) => {
       const { connection } = clients[player.playerId];
       connection.emit("finishGame", game.players);
     });
@@ -150,7 +147,33 @@ const updateGameState = () => {
   }
 };
 
-const isFinishGame = (state) => state && Object.keys(state).length === 36;
+const saveGame = (players, cells) => {
+  const winner = getWinner(players[0].score, players[1].score);
+  const newFinishedGame = new Game({
+    cells,
+    winner: {
+      user: winner === 1 ? players[0].info.id : players[1].info.id,
+      color: winner === 1 ? players[0].info.id : players[1].color,
+      score: winner === 1 ? players[0].info.id : players[1].score,
+    },
+    looser: {
+      user: winner === 1 ? players[1].info.id : players[0].info.id,
+      color: winner === 1 ? players[1].info.id : players[0].color,
+      score: winner === 1 ? players[1].info.id : players[0].score,
+    },
+    isEqual: winner === 0,
+  });
+  newFinishedGame.save().then((res) => console.log("GUARDADO", res));
+};
+
+const getWinner = (scorePlayer1, scorePlayer2) => {
+  const winner =
+    scorePlayer1 > scorePlayer2 ? 1 : scorePlayer2 > scorePlayer1 ? 2 : 0;
+  return winner;
+};
+
+const isFinishGame = (state, cells) =>
+  state && Object.keys(state).length === cells;
 
 // DEVUELVE UN COLOR RANDOM DE LOS COLORES QUE RECIBE POR PARAM
 const getRandomColor = (colors) => {
