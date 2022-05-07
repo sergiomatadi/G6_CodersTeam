@@ -27,7 +27,7 @@ sockets(io);
 // Para poder usar los CSS y JS e imagenes incrustados en el HTML
 app.use(express.static(path.join((__dirname, "../frontend/src/"))));
 app.use(express.json());
-app.use("/users", users);
+app.use("/api/users", users);
 
 // Definicion carpeta vista y uso de pug como motor de renderizacion
 app.set("views", path.join((__dirname, "../frontend/src/html")));

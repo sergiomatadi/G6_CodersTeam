@@ -4,7 +4,7 @@ const logUser = () => {
 };
 
 const checkUser = async () => {
-  const url = "http://localhost:3001/users/login/";
+  const url = "http://localhost:3001/api/users/login/";
 
   const dataToSend = {
     email: document.getElementById("inputEmailLogin").value,

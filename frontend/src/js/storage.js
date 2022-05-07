@@ -1,11 +1,11 @@
 function obtenerDatos() {
   //Espero a que el usuario clicke el boton para arrancar la funcion guardarDatos.
   let boton = document.getElementById("botonregistro");
-  boton.addEventListener("click", guardarDatos, false);
+  // boton.addEventListener("click", guardarDatos, false);
 }
 
 async function guardarDatos() {
-  const url = "http://localhost:3001/users/";
+  const url = "http://localhost:3001/api/users/";
 
   //Guardo los datos del usuario en el localStorage.
   let email = document.getElementById("inputEmail3").value;

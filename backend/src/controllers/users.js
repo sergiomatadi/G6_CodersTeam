@@ -52,6 +52,13 @@ router.post("/", (req, res) => {
     });
 });
 
+router.get("/", async (req, res) =>{
+  const jugadores = await User.find();
+  res.json({data: jugadores})
+})
+
+
+
 /* LOGUEA A UN USUARIO */
 router.post("/login", (req, res) => {
   const { email, password } = req.body;

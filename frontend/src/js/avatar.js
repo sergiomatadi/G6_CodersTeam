@@ -3,7 +3,7 @@ if (!localStorage.getItem("sesionUser")) {
   window.location.href = "/login";
 }
 const sesion = JSON.parse(localStorage.getItem("sesionUser"));
-const URL = "http://localhost:3001/users/";
+const URL = "http://localhost:3001/api/users/";
 
 async function elegirAvatar(avatar) {
   const response = await fetch(`${URL}${sesion.id}`, {
