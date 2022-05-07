@@ -20,7 +20,7 @@ const User = require("../models/User");
 
 const TOKENS = [];
 
-/* REGISTROR DE UN USUARIO */
+/* REGISTRO DE UN USUARIO */
 router.post("/", (req, res) => {
   const { name, email, password, avatar } = req.body;
 
@@ -52,12 +52,27 @@ router.post("/", (req, res) => {
     });
 });
 
-router.get("/", async (req, res) =>{
+//Api Rest GET de jugadores
+router.get("/", async (req, res) => {
   const jugadores = await User.find();
-  res.json({data: jugadores})
-})
+  res.json({ data: jugadores });
+});
 
-
+//Api Rest DELETE de jugadores
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  User.deleteOne({id})
+    .then(() => {
+      res.json({ ok: true, data: "Usuario eliminado correctamente" });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json({
+        ok: false,
+        data: `Error, id recibido mal formado.`,
+      });
+    });
+});
 
 /* LOGUEA A UN USUARIO */
 router.post("/login", (req, res) => {

@@ -1,0 +1,2 @@
+//Api Rest DELETE de jugadores
+DELETE http://localhost:3001/api/users/6276aa8efcf368c7797e7139

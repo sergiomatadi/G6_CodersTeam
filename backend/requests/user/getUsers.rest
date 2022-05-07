@@ -1,1 +1,2 @@
+//Api Rest GET de jugadores
 GET http://localhost:3001/api/users/

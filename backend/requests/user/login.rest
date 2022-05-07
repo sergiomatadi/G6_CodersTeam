@@ -1,7 +1,8 @@
-POST http://localhost:3001/api/users//login/
+//Api Rest POST para loguear usuarios
+POST http://localhost:3001/api/users/login/
 Content-Type: application/json
 
 {
-  "email": "newUser@mail.com",
+  "email": "newUser@maig.com",
   "password": "123"
 }

@@ -1,4 +1,5 @@
-PUT http://localhost:3001/api/users//6273c0c24d487e0416ab437a
+//Api Rest PUT de jugadores(Avatar)
+PUT http://localhost:3001/api/users/6276aa8efcf368c7797e7139
 Content-Type: application/json
 
 {
