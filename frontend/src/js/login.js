@@ -3,7 +3,7 @@ const logUser = () => {
   boton.addEventListener("click", checkUser, false);
 };
 
-const checkUser = async () => {
+const checkUser = () => {
   const url = "http://localhost:3001/api/users/login/";
 
   const dataToSend = {
@@ -11,12 +11,15 @@ const checkUser = async () => {
     password: document.getElementById("inputPasswordLogin").value,
   };
 
-  const response = await fetch(url, {
+  enviar(dataToSend, url);
+
+  //OLD FETCH
+  /*const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataToSend),
   });
-
+  
   const { ok, data, error } = await response.json();
 
   // Depende del statusCode sabemos si ha ido bien el inicio de sesión o no
@@ -29,7 +32,34 @@ const checkUser = async () => {
   } else {
     alert("Usuario o contraseña incorrecta!");
     console.error("login fail", error);
-  }
+  }*/
 };
+
+function enviar(datos, url) { 
+  const jsonData = JSON.stringify(datos);
+  var xmlhttp = new XMLHttpRequest();
+
+  xmlhttp.onreadystatechange = () => {
+    if (xmlhttp.readyState == XMLHttpRequest.DONE) { // XMLHttpRequest.DONE = 4
+      if (xmlhttp.status == 200) {
+        // Guardamos en localStorage el user conectado
+        localStorage.setItem("sesionUser", JSON.stringify(datos));
+        // Login OK redirigimos al user a las salas
+        window.location.href = "/avatar";
+      }
+      else if (xmlhttp.status == 400) {
+        alert("Usuario o contraseña incorrecta!");
+      }
+      else {
+        alert('something else other than 200 was returned');
+      }
+    }
+  };
+  
+  xmlhttp.open("POST", url, true);
+  xmlhttp.setRequestHeader("Content-Type", "application/json");
+  xmlhttp.send(jsonData);
+  
+}
 
 window.addEventListener("load", logUser, false);
