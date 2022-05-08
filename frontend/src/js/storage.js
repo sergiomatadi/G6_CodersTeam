@@ -32,7 +32,7 @@ function guardarDatos() {
   if (ok) {
     window.location.href = "/login";
   } else {
-    // RFegistro AIL deberiamos mostrar un mensaje al user diciendo 'Ha ocurrido un error al registrarse' o algo asi
+    // Registro FAIL deberiamos mostrar un mensaje al user diciendo 'Ha ocurrido un error al registrarse' o algo asi
     console.error("Registro fail", error);
   }*/
 };
