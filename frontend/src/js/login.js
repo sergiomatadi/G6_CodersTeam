@@ -13,7 +13,7 @@ const checkUser = () => {
 
   enviar(dataToSend, url);
 
-  //OLD FETCH
+  //Metodo antiguo para hacer login usando fetch 
   /*const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -35,6 +35,7 @@ const checkUser = () => {
   }*/
 };
 
+//Metodo para hacer login usando AJAX
 function enviar(datos, url) { 
   const jsonData = JSON.stringify(datos);
   var xmlhttp = new XMLHttpRequest();
@@ -43,7 +44,7 @@ function enviar(datos, url) {
     if (xmlhttp.readyState == XMLHttpRequest.DONE) { // XMLHttpRequest.DONE = 4
       if (xmlhttp.status == 200) {
         // Guardamos en localStorage el user conectado
-        localStorage.setItem("sesionUser", JSON.stringify(datos));
+        localStorage.setItem("sesionUser", xmlhttp.response);
         // Login OK redirigimos al user a las salas
         window.location.href = "/avatar";
       }
