@@ -289,7 +289,7 @@ if (!localStorage.getItem("sesionUser")) {
     } else {
       titleEl.textContent = "Enhorabuena! Habeis empatado.";
     }
-  });
+  }); 
 
   const headerNameElement = document.getElementById("username");
 

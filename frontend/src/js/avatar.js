@@ -32,14 +32,16 @@ function elegirAvatar(avatar) {
   xmlhttp.onreadystatechange = () => {
     if (xmlhttp.readyState == XMLHttpRequest.DONE) {
       if (xmlhttp.status == 200) {
-        localStorage.setItem("sesionUser", JSON.stringify(sesion.data));
+        sesion.avatar = avatar;
+        localStorage.setItem("sesionUser", JSON.stringify(sesion));
         window.location.href = "/salas";
       } else if (xmlhttp.status == 400) { 
         console.error("Error al actualizar el avatar del usuario", error);
       }
     }
   }
-  xmlhttp.open("PUT", `${URL}${sesion.data.id}`, true);
+
+  xmlhttp.open("PUT", `${URL}${sesion.id}`, true);
   xmlhttp.setRequestHeader("Content-Type", "application/json");
   xmlhttp.send(jsonAvatar);
 };

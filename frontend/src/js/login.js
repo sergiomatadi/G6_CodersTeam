@@ -41,10 +41,13 @@ function enviar(datos, url) {
   var xmlhttp = new XMLHttpRequest();
 
   xmlhttp.onreadystatechange = () => {
+    
     if (xmlhttp.readyState == XMLHttpRequest.DONE) { // XMLHttpRequest.DONE = 4
       if (xmlhttp.status == 200) {
         // Guardamos en localStorage el user conectado
-        localStorage.setItem("sesionUser", xmlhttp.response);
+        const { data } = JSON.parse(xmlhttp.response);
+        localStorage.setItem("sesionUser", JSON.stringify(data));
+        
         // Login OK redirigimos al user a las salas
         window.location.href = "/avatar";
       }
